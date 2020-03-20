@@ -1,10 +1,12 @@
 # Extrapolated COVID-19 Infections
 
-## Dresden 
+Ported from @psteinb's excellent chart for [Dresden, Germany](https://github.com/psteinb/covid19-curve-your-city) 
 
-![](plus5.png)
+## Montgomery County, Maryland, USA
 
-Data source: [dresden.de](https://www.dresden.de/de/leben/gesundheit/hygiene/infektionsschutz/corona.php)
+![MoCo](us_md_montgomery.png)
+
+Data source: [washingtonpost.com](https://www.washingtonpost.com)
 
 # Reproduce This!
 
@@ -19,12 +21,12 @@ Data source: [dresden.de](https://www.dresden.de/de/leben/gesundheit/hygiene/inf
 3. Run the `exponential.R` script against the included dataset
 
    ``` 
-   $ Rscript exponential.R -i de_dresden.csv
+   $ Rscript exponential.R -i us_md_montgomery.csv
    ```
 
-4. Create your own dataset and compare your location! E.g.,
+4. Create your own dataset and compare your location! *E.g.*,
 
    ```csv
-   Location,Date,Diagnosed
+   location,date,diagnosed
    Dresden,2020-03-07,2
    ```
