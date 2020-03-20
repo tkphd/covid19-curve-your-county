@@ -6,7 +6,7 @@ Ported from @psteinb's excellent chart for [Dresden, Germany](https://github.com
 
 ![MoCo](us_md_montgomery.png)
 
-Data source: [washingtonpost.com](https://www.washingtonpost.com)
+*Sources are listed inline with the data!*
 
 # Reproduce This!
 
