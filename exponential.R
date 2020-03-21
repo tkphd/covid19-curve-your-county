@@ -2,7 +2,6 @@ library(ggplot2)
 library(dplyr, warn.conflicts=FALSE)
 library(readr)
 library(optparse)
-## library(nls2)
 
 ## DEFINING COMMAND LINE INTERFACE
 parser <- OptionParser(## description='process COVID19 data'
@@ -24,18 +23,7 @@ if (is.null(opts$input)){
   stop("At least one argument must be supplied (input file).n", call.=FALSE)
 }
 
-mytheme = theme_bw(base_size=20)##  + theme(
-    ## ##text = element_text(family = "Decima WE", color = "grey20"),
-    ## ## strip.background = element_blank(),
-    ## ## strip.text = element_text(hjust = 0),
-    ## ## panel.grid.major = element_line(colour="grey50",size=0.35),
-    ## ## panel.grid.minor = element_blank(),
-    ## ## plot.margin=unit(c(0,1,0,1),"cm"),
-    ## legend.position="top",
-    ## plot.caption=element_text(hjust=1,size=14,colour="grey30"),
-    ## plot.subtitle=element_text(face="italic",size=14,colour="grey40"),
-    ## plot.title=element_text(size=18,face="bold")
-## )
+mytheme = theme_bw(base_size=20)
 
 df = read.csv(opts$input)
 df$date = as.Date(df$date)
