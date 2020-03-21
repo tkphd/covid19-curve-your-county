@@ -6,7 +6,7 @@ Ported from @psteinb's excellent chart for [Dresden, Germany](https://github.com
 
 ![MoCo](us_md_montgomery.png)
 
-*Sources are listed inline with the data!*
+Data source: https://coronavirus.maryland.gov/
 
 # Reproduce This!
 
