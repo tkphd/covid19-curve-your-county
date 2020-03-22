@@ -10,7 +10,7 @@ option_list <- list(
   make_option(c('-i','--input'),
               type="character",
               action="store",
-              default="de_dresden.csv",
+              default="us_md_montgomery.csv",
               help='a CSV file with COVID19 diagnosed cases [default %default]'),
   make_option(c('-o','--output'),
               default='us_md_montgomery.png',
@@ -43,7 +43,7 @@ lwr.b = summary(model.expon)$coefficients[2,1] - summary(model.expon)$coefficien
 myplot = ggplot(df, aes(x=day, y=diagnosed)) +
   geom_point() +
   ggtitle("COVID-19 Infections: MoCo, MD") +
-  xlab("Day") + ylab("Diagnosed") +
+  xlab("Day") + ylab("# COVID-19 Diagnoses") +
   geom_line(aes(
                 y=fitted(model.expon)
                 ),
@@ -68,7 +68,7 @@ dfx
 myplot = ggplot(dfx, aes(x=day, y=diagnosed)) +
   ggtitle("COVID-19 Infections: MoCo, MD",
           subtitle="github.com/tkphd/covid19-curve-your-county") +
-  xlab("Day") + ylab("Diagnosed") +
+  xlab("Day") + ylab("# COVID-19 Diagnoses") +
   xlim(0,nrow(df)+7) +
   geom_ribbon(aes(ymin = lwr, ymax = upr), fill = "grey70") +
   geom_line(color="red",
