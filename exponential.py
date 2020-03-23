@@ -9,9 +9,19 @@ from time import strptime
 from datetime import date
 from scipy.stats import t
 
+"""
+Logistic Curve, via SymPy
+
+y    = c/(exp((b - x)/a) + 1)
+dyda = c*(b - x)*exp((b - x)/a)/(a**2*(exp((b - x)/a) + 1)**2)
+dydb = -c*exp((b - x)/a)/(a*(exp((b - x)/a) + 1)**2)
+dydc =  1/(exp((b - x)/a) + 1)
+"""
+
+
 def model(p, x):
-    a, b = p
-    return a * (1 + b) ** x
+    a, b, c = p
+    return c / (np.exp((b - x) / a) + 1)
 
 
 fig = plt.figure(figsize=(6, 4))
@@ -36,18 +46,21 @@ plt.scatter(x, y, marker=".", s=10, color="k", zorder=10)
 
 # Levenburg-Marquardt Least-Squares Fit
 
-f = kmpfit.simplefit(model, [1, 1], x, y)
-a, b = f.params
+f = kmpfit.simplefit(model, [1, 1, 1], x, y)
+a, b, c = f.params
 
-print("cases ~ {0:.2g} * (1 + {1:.2g})^(t - t0))".format(a, b))
+print("cases ~ {0:.1f}/(1 + exp(({1:.1f} - t)/{2:.1f}))".format(c, b, a))
 
 # Confidence Band: dfdp represents the partial derivatives of the model with respect to each parameter p (i.e., a, b, and c)
 
 xhat = np.linspace(0, x[-1] + 7, 100)
-dfdp = [(1 + b) ** xhat, (a * xhat * (1 + b) ** xhat) / (1 + b)]
+dfdp = np.array([
+    c * (b - xhat) * np.exp((b - xhat) / a) / (a** 2 * (np.exp((b - xhat) / a) + 1)** 2),
+    -c * np.exp((b - xhat) / a) / (a * (np.exp((b - xhat) / a) + 1)** 2),
+    1 / (np.exp((b - xhat) / a) + 1)
+])
 level = 0.95
 yhat, upper, lower = f.confidence_band(xhat, dfdp, level, model)
-
 ix = np.argsort(xhat)
 plt.plot(xhat[ix], yhat[ix], c="red", lw=1, zorder=5)
 plt.fill_between(
@@ -68,7 +81,11 @@ tomorrow = date.fromordinal(today + 1)
 nextWeek = date.fromordinal(today + 7)
 
 xhat = np.array([tomorrow.toordinal() - start, nextWeek.toordinal() - start])
-dfdp = [(1 + b) ** xhat, (a * xhat * (1 + b) ** xhat) / (1 + b)]
+dfdp = np.array([
+    c * (b - xhat) * np.exp((b - xhat) / a) / (a ** 2 * (np.exp((b - xhat) / a) + 1) ** 2),
+    -c * np.exp((b - xhat) / a) / (a * (np.exp((b - xhat) / a) + 1) ** 2),
+    1 / (np.exp((b - xhat) / a) + 1)
+])
 yhat, upper, lower = f.confidence_band(xhat, dfdp, level, model)
 dx = 0.25
 
