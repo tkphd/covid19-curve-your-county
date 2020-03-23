@@ -1,4 +1,7 @@
 location,date,diagnosed,source
+Montgomery,2020-03-05,3,"https://www.montgomerycountymd.gov/HHS/RightNav/Coronavirus.html"
+Montgomery,2020-03-08,4,"https://www2.montgomerycountymd.gov/mcgportalapps/Press_Detail.aspx?Item_ID=23951"
+Montgomery,2020-03-10,5,"https://www.delmarvanow.com/story/news/local/maryland/2020/03/10/marylands-coronavirus-diagnoses-up-eight/5011347002/"
 Montgomery,2020-03-15,12,"https://twitter.com/MontgomeryCoMD/status/1239360744573014016"
 Montgomery,2020-03-16,15,"https://twitter.com/riccimike/status/1239553105856884736"
 Montgomery,2020-03-17,24,"https://twitter.com/MDHealthDept/status/1239918755792089088"
