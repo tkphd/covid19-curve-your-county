@@ -8,25 +8,27 @@ Ported from @psteinb's excellent chart for [Dresden, Germany](https://github.com
 
 Data source: https://coronavirus.maryland.gov/
 
-# Reproduce This!
+## Reproduce This!
 
-1. Install [R](https://www.r-project.org)
-2. Install ["tidyverse"](https://www.tidyverse.org/)
+1. Install [Python 3](https://www.anaconda.com/distribution/)
+2. Install dependencies
 
-   ``` r
-   > install.packages("tidyverse")
-   > install.packages(c("ggplot2","dplyr","readr","optparse"))
+   ```bash
+   $ conda install matplotlib numpy pandas pip scipy
+   $ pip install https://www.astro.rug.nl/software/kapteyn/kapteyn-3.0.tar.gz
    ```
 
-3. Run the `exponential.R` script against the included dataset
+3. Run the `exponential.py` script against the included dataset
 
    ``` 
-   $ Rscript exponential.R -i us_md_montgomery.csv
+   $ python exponential.py
    ```
 
 4. Create your own dataset and compare your location! *E.g.*,
 
    ```csv
    location,date,diagnosed
-   Dresden,2020-03-07,2
+   Montgomery,2020-03-07,2
    ```
+
+   Gaps in the data are OK, just provide what you have.
