@@ -27,8 +27,13 @@ Data source: https://coronavirus.maryland.gov/
 4. Create your own dataset and compare your location! *E.g.*,
 
    ```csv
-   location,date,diagnosed
-   Montgomery,2020-03-07,2
+   date,diagnosed,source
+   2020-03-05,3,"https://www.montgomerycountymd.gov/HHS/RightNav/Coronavirus.html"
+   2020-03-08,4,"https://www2.montgomerycountymd.gov/mcgportalapps/Press_Detail.aspx?Item_ID=23951"
    ```
 
-   Gaps in the data are OK, just provide what you have.
+   Gaps in the data are OK, just provide what you have. You will want to edit the script to set the
+   proper place-name and URL in the title.
+
+5. Share your findings to help others assess the spread of SARS-CoV-2, and to gauge the
+   effectiveness of our collective response.
