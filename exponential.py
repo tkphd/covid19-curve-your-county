@@ -23,14 +23,18 @@ plt.ylabel("# Diagnosed Cases")
 # Data
 
 df = pd.read_csv("us_md_montgomery.csv")
+print(df)
 
 y = np.array(df["diagnosed"])
-start = strptime(df["date"].iloc[0], "%Y-%m-%d").tm_yday
-today = strptime(df["date"].iloc[-1], "%Y-%m-%d").tm_yday
+start = strptime(df["date"].iloc[0], "%Y-%m-%d")
+start = date(start.tm_year, start.tm_mon, start.tm_mday).toordinal()
+today = strptime(df["date"].iloc[-1], "%Y-%m-%d")
+today = date(today.tm_year, today.tm_mon, today.tm_mday).toordinal()
 
 x = np.zeros_like(y)
 for i in range(len(x)):
-    x[i] = strptime(df["date"].iloc[i], "%Y-%m-%d").tm_yday - start
+    day = strptime(df["date"].iloc[i], "%Y-%m-%d")
+    x[i] = date(day.tm_year, day.tm_mon, day.tm_mday).toordinal() - start
 
 plt.scatter(x, y, marker=".", s=10, color="k", zorder=10)
 
@@ -65,7 +69,7 @@ plt.ylim([0, upper[-1]])
 # Predictions
 
 tomorrow = date.fromordinal(today + 1)
-nextWeek = date.fromordinal(today + 7)
+nextWeek = date.fromordinal(today + 6)
 
 xhat = np.array([tomorrow.toordinal() - start, nextWeek.toordinal() - start])
 dfdp = [(1 + b) ** xhat, (a * xhat * (1 + b) ** xhat) / (1 + b)]
