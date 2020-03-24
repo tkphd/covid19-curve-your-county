@@ -15,15 +15,14 @@ def model(p, x):
 
 
 fig = plt.figure(figsize=(6, 4))
-plt.suptitle("COVID-19 Cases: Montgomery County, MD")
-plt.title("github.com/tkphd/covid19-curve-your-county")
+plt.suptitle("COVID-19 Cases: Montgomery County, MD", fontweight="bold")
+plt.title("github.com/tkphd/covid19-curve-your-county", style="oblique")
 plt.xlabel("# Days")
 plt.ylabel("# Diagnosed Cases")
 
 # Data
 
 df = pd.read_csv("us_md_montgomery.csv")
-print(df)
 
 y = np.array(df["diagnosed"])
 start = strptime(df["date"].iloc[0], "%Y-%m-%d")
@@ -43,9 +42,9 @@ plt.scatter(x, y, marker=".", s=10, color="k", zorder=10)
 f = kmpfit.simplefit(model, [1, 1], x, y)
 a, b = f.params
 
-print("cases ~ {0:.2g} * (1 + {1:.2g})^(t - t0))".format(a, b))
+# print("cases ~ {0:.2g} * (1 + {1:.2g})^t".format(a, b))
 
-# Confidence Band: dfdp represents the partial derivatives of the model with respect to each parameter p (i.e., a, b, and c)
+# Confidence Band: dfdp represents the partial derivatives of the model with respect to each parameter p (i.e., a and b)
 
 xhat = np.linspace(0, x[-1] + 7, 100)
 dfdp = [(1 + b) ** xhat, (a * xhat * (1 + b) ** xhat) / (1 + b)]
