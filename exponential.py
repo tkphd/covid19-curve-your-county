@@ -68,7 +68,7 @@ plt.ylim([0, upper[-1]])
 # Predictions
 
 tomorrow = date.fromordinal(today + 1)
-nextWeek = date.fromordinal(today + 6)
+nextWeek = date.fromordinal(today + 7)
 
 xhat = np.array([tomorrow.toordinal() - start, nextWeek.toordinal() - start])
 dfdp = [(1 + b) ** xhat, (a * xhat * (1 + b) ** xhat) / (1 + b)]
