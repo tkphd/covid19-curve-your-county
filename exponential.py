@@ -17,7 +17,7 @@ def model(p, x):
 fig = plt.figure(figsize=(6, 4))
 plt.suptitle("COVID-19 Cases: Montgomery County, MD", fontweight="bold")
 plt.title("github.com/tkphd/covid19-curve-your-county", style="oblique")
-plt.xlabel("# Days")
+plt.xlabel("Day of Record")
 plt.ylabel("# Diagnosed Cases")
 
 # Data
