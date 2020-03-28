@@ -8,6 +8,8 @@ from kapteyn import kmpfit
 from time import strptime
 from datetime import date
 from scipy.stats import t
+from matplotlib import style
+style.use("seaborn")
 
 def model(p, x):
     a, b = p
@@ -42,8 +44,6 @@ plt.scatter(x, y, marker=".", s=10, color="k", zorder=10)
 f = kmpfit.simplefit(model, [1, 1], x, y)
 a, b = f.params
 
-# print("cases ~ {0:.2g} * (1 + {1:.2g})^t".format(a, b))
-
 # Confidence Band: dfdp represents the partial derivatives of the model with respect to each parameter p (i.e., a and b)
 
 xhat = np.linspace(0, x[-1] + 7, 100)
@@ -74,9 +74,10 @@ xhat = np.array([tomorrow.toordinal() - start, nextWeek.toordinal() - start])
 dfdp = [(1 + b) ** xhat, (a * xhat * (1 + b) ** xhat) / (1 + b)]
 yhat, upper, lower = f.confidence_band(xhat, dfdp, level, model)
 dx = 0.25
+dt = 14
 
 plt.text(
-    dx,
+    xhat[0] - dt,
     yhat[0],
     "{0}/{1}: ({2:.0f} < {3:.0f} < {4:.0f})".format(
         tomorrow.month, tomorrow.day, lower[0], yhat[0], upper[0]
@@ -86,7 +87,7 @@ plt.text(
     bbox=dict(boxstyle="round", ec="black", fc="white", linewidth=dx),
 )
 plt.text(
-    dx,
+    xhat[1] - dt,
     yhat[1],
     "{0}/{1}: ({2:.0f} < {3:.0f} < {4:.0f})".format(
         nextWeek.month, nextWeek.day, lower[1], yhat[1], upper[1]
@@ -96,13 +97,13 @@ plt.text(
     bbox=dict(boxstyle="round", ec="black", fc="white", linewidth=dx),
 )
 
-hw = (upper[1] - lower[1]) / 50
+hw = 12
 hl = xhat[1] / 100
 
 plt.arrow(
-    dx,
+    xhat[0] - dt,
     yhat[0],
-    xhat[0] - dx - 0.0625,
+    dt - dx + 0.0625,
     0,
     fc="black",
     ec="black",
@@ -114,9 +115,9 @@ plt.arrow(
     zorder=2,
 )
 plt.arrow(
-    dx,
+    xhat[1] - dt,
     yhat[1],
-    xhat[1] - dx - 0.0625,
+    dt - dx + 0.0625,
     0,
     fc="black",
     ec="black",
