@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 from time import strptime
 from datetime import date
+from string import Template
 from scipy.optimize import curve_fit, least_squares
 from scipy.stats import describe, t
 from matplotlib import style
@@ -55,16 +56,15 @@ perr = np.sqrt(np.diag(pcov))
 coef = describe(pcov)
 a, b = popt
 
-print("cases ~ {0:.3g} * (1 + {1:.3g})^t".format(a, b))
-
 # Confidence Band: dfdp represents the partial derivatives of the model with respect to each parameter p (i.e., a and b)
 
 xhat = np.linspace(0, x[-1] + 7, 100)
 yhat = model(xhat, a, b)
 
 upr_a = a + perr[0]
-upr_b = b + perr[1]
 lwr_a = a - perr[0]
+
+upr_b = b + perr[1]
 lwr_b = b - perr[1]
 
 upper = model(xhat, upr_a, upr_b)
@@ -93,6 +93,13 @@ yhat = model(xhat, a, b)
 upper = model(xhat, upr_a, upr_b)
 lower = model(xhat, lwr_a, lwr_b)
 
+
+plt.text(0.5, (yhat[1] + 3 * upper[1]) / 4,
+         r"$y = ({0:.4f} \pm {2:.4f}) \times [1 + ({1:.4f} \pm {3:.4f})]^x$".format(a, b, perr[0], perr[1]),
+         zorder=5,
+         bbox=dict(boxstyle="round", ec="black", fc="white", linewidth=2*dx)
+)
+
 plt.text(
     xhat[0] - dt,
     yhat[0],
@@ -101,7 +108,7 @@ plt.text(
     ),
     va="center",
     zorder=5,
-    bbox=dict(boxstyle="round", ec="black", fc="white", linewidth=dx),
+    bbox=dict(boxstyle="round", ec="black", fc="white", linewidth=dx)
 )
 plt.text(
     xhat[1] - dt,
@@ -111,7 +118,7 @@ plt.text(
     ),
     va="center",
     zorder=5,
-    bbox=dict(boxstyle="round", ec="black", fc="white", linewidth=dx),
+    bbox=dict(boxstyle="round", ec="black", fc="white", linewidth=dx)
 )
 
 hw = 12
