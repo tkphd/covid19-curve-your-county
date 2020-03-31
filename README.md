@@ -14,8 +14,7 @@ Data source: https://coronavirus.maryland.gov/
 2. Install dependencies
 
    ```bash
-   $ conda install matplotlib numpy pandas pip scipy
-   $ pip install https://www.astro.rug.nl/software/kapteyn/kapteyn-3.0.tar.gz
+   $ conda install matplotlib numpy pandas scipy
    ```
 
 3. Run the `exponential.py` script against the included dataset
