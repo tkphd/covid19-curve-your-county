@@ -1,19 +1,21 @@
 # -*- coding: utf-8 -*-
-# Based on https://stackoverflow.com/questions/24633664/confidence-interval-for-exponential-curve-fit/37080916#37080916
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from kapteyn import kmpfit
 from time import strptime
 from datetime import date
-from scipy.stats import t
+from scipy.optimize import curve_fit, least_squares
+from scipy.stats import describe, t
 from matplotlib import style
 style.use("seaborn")
 
-def model(p, x):
-    a, b = p
+def model(x, a, b):
     return a * (1 + b) ** x
+
+def jacobian(x, a, b):
+    return np.array([(1 + b) ** x,
+                     (a * x * (1 + b) ** x) / (1 + b)]).T
 
 
 fig = plt.figure(figsize=(6, 4))
@@ -41,15 +43,27 @@ plt.scatter(x, y, marker=".", s=10, color="k", zorder=10)
 
 # Levenburg-Marquardt Least-Squares Fit
 
-f = kmpfit.simplefit(model, [1, 1], x, y)
-a, b = f.params
+s = np.ones_like(x)
+popt, pcov = curve_fit(model, x, y, p0=[1,1], sigma=s, method="lm", jac=jacobian)
+perr = np.sqrt(np.diag(pcov))
+coef = describe(pcov)
+print("popt\n", popt)
+print("pcov\n", pcov)
+print("perr\n", perr)
+a, b = popt
 
 # Confidence Band: dfdp represents the partial derivatives of the model with respect to each parameter p (i.e., a and b)
 
 xhat = np.linspace(0, x[-1] + 7, 100)
-dfdp = [(1 + b) ** xhat, (a * xhat * (1 + b) ** xhat) / (1 + b)]
-level = 0.95
-yhat, upper, lower = f.confidence_band(xhat, dfdp, level, model)
+yhat = model(xhat, a, b)
+
+upr_a = a + perr[0]
+upr_b = b + perr[1]
+lwr_a = a - perr[0]
+lwr_b = b - perr[1]
+
+upper = model(xhat, upr_a, upr_b)
+lower = model(xhat, lwr_a, lwr_b)
 
 ix = np.argsort(xhat)
 plt.plot(xhat[ix], yhat[ix], c="red", lw=1, zorder=5)
@@ -60,21 +74,19 @@ plt.fill_between(
     xhat[ix], lower[ix], yhat[ix], edgecolor=None, facecolor="silver", zorder=1
 )
 
-# Plot Boundaries
-
-plt.xlim([0, xhat[-1]])
-plt.ylim([0, upper[-1]])
-
 # Predictions
+
+dx = 0.25
+dt = 14
 
 tomorrow = date.fromordinal(today + 1)
 nextWeek = date.fromordinal(today + 7)
 
 xhat = np.array([tomorrow.toordinal() - start, nextWeek.toordinal() - start])
-dfdp = [(1 + b) ** xhat, (a * xhat * (1 + b) ** xhat) / (1 + b)]
-yhat, upper, lower = f.confidence_band(xhat, dfdp, level, model)
-dx = 0.25
-dt = 14
+yhat = model(xhat, a, b)
+
+upper = model(xhat, upr_a, upr_b)
+lower = model(xhat, lwr_a, lwr_b)
 
 plt.text(
     xhat[0] - dt,
@@ -128,6 +140,11 @@ plt.arrow(
     linewidth=0.5,
     zorder=2,
 )
+
+# Plot Boundaries
+
+plt.xlim([0, xhat[-1]])
+plt.ylim([0, upper[-1]])
 
 # Save figure
 
