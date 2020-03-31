@@ -42,15 +42,20 @@ for i in range(len(x)):
 plt.scatter(x, y, marker=".", s=10, color="k", zorder=10)
 
 # Levenburg-Marquardt Least-Squares Fit
-
-s = np.ones_like(x)
-popt, pcov = curve_fit(model, x, y, p0=[1,1], sigma=s, method="lm", jac=jacobian)
+"""
+Note that sigma represents the relative error associated with each data point. By default, curve_fit
+will assume an array of opnes (constant values imply no difference in error), which is probably
+incorrect: given sparsity of testing, there's considerable uncertainty, and the earlier numbers may
+be lower than the truth to a greater extent than the later numbers. Quantifying this error by some
+non-trivial means for each datapoint would produce much more realistic uncertainty bands in the
+final plots.
+"""
+popt, pcov = curve_fit(model, x, y, sigma=None, method="lm", jac=jacobian)
 perr = np.sqrt(np.diag(pcov))
 coef = describe(pcov)
-print("popt\n", popt)
-print("pcov\n", pcov)
-print("perr\n", perr)
 a, b = popt
+
+print("cases ~ {0:.3g} * (1 + {1:.3g})^t".format(a, b))
 
 # Confidence Band: dfdp represents the partial derivatives of the model with respect to each parameter p (i.e., a and b)
 
