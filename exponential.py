@@ -6,8 +6,8 @@ import pandas as pd
 from time import strptime
 from datetime import date
 from string import Template
-from scipy.optimize import curve_fit, least_squares
-from scipy.stats import describe, t
+from scipy.optimize import curve_fit
+from scipy.stats import describe, chisquare, t
 from matplotlib import style
 style.use("seaborn")
 
@@ -30,13 +30,14 @@ plt.ylabel("# Diagnosed Cases")
 df = pd.read_csv("us_md_montgomery.csv")
 
 y = np.array(df["diagnosed"])
+N = len(y)
 start = strptime(df["date"].iloc[0], "%Y-%m-%d")
 start = date(start.tm_year, start.tm_mon, start.tm_mday).toordinal()
 today = strptime(df["date"].iloc[-1], "%Y-%m-%d")
 today = date(today.tm_year, today.tm_mon, today.tm_mday).toordinal()
 
 t = np.zeros_like(y)
-for i in range(len(t)):
+for i in range(N):
     day = strptime(df["date"].iloc[i], "%Y-%m-%d")
     t[i] = date(day.tm_year, day.tm_mon, day.tm_mday).toordinal() - start
 
@@ -52,9 +53,15 @@ non-trivial means for each datapoint would produce much more realistic uncertain
 final plots.
 """
 popt, pcov = curve_fit(model, t, y, sigma=None, method="lm", jac=jacobian)
-perr = np.sqrt(np.diag(pcov))
-coef = describe(pcov)
 a, b = popt
+coef = describe(pcov)
+perr = np.sqrt(np.diag(pcov))
+
+# Reduced chi-square goodness of fit
+## https://en.wikipedia.org/wiki/Reduced_chi-squared_statistic
+
+chisq, chip = chisquare(y, model(t, a, b))
+ndof = N - 2
 
 # Confidence Band: dfdp represents the partial derivatives of the model with respect to each parameter p (i.e., a and b)
 
@@ -97,7 +104,13 @@ lower = model(that, lwr_a, lwr_b)
 plt.text(0.5, (yhat[1] + 3 * upper[1]) / 4,
          r"$y = ({0:.4f} \pm {2:.4f}) \times [1 + ({1:.4f} \pm {3:.4f})]^t$".format(a, b, perr[0], perr[1]),
          zorder=5,
-         bbox=dict(boxstyle="round", ec="black", fc="white", linewidth=2*dx)
+         bbox=dict(boxstyle="round", ec="black", fc="ghostwhite", linewidth=2.5*dx)
+)
+
+plt.text(0.5, (3 * yhat[1] + 2 * upper[1]) / 5,
+         r"$\chi^2_\nu={0:.3g}$".format(chisq / ndof),
+         zorder=5,
+         bbox=dict(boxstyle="round", ec="black", fc="ghostwhite", linewidth=dx)
 )
 
 plt.text(
@@ -108,8 +121,9 @@ plt.text(
     ),
     va="center",
     zorder=5,
-    bbox=dict(boxstyle="round", ec="black", fc="white", linewidth=dx)
+    bbox=dict(boxstyle="round", ec="black", fc="ghostwhite", linewidth=dx)
 )
+
 plt.text(
     that[1] - dt,
     yhat[1],
@@ -118,7 +132,7 @@ plt.text(
     ),
     va="center",
     zorder=5,
-    bbox=dict(boxstyle="round", ec="black", fc="white", linewidth=dx)
+    bbox=dict(boxstyle="round", ec="black", fc="ghostwhite", linewidth=dx)
 )
 
 hw = 12
