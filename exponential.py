@@ -104,19 +104,15 @@ yhat = model(that, a, b)
 upper = model(that, upr_a, upr_b)
 lower = model(that, lwr_a, lwr_b)
 
-
-plt.text(0.5, (yhat[1] + 3 * upper[1]) / 4,
-         r"$f(t) = ({0:.4f} \pm {2:.4f}) \times [1 + ({1:.4f} \pm {3:.4f})]^t$".format(a, b, perr[0], perr[1]),
-         zorder=5,
-         bbox=dict(boxstyle="round", ec="black", fc="ghostwhite", linewidth=2.5*dx)
+# Overlay model on plot
+plt.text(0.5, 0.98 * upper[1],
+    "$f(t) = a (1 + b)^t$\n$a = {0:.4f} \pm {2:.4f}$\n$b = {1:.4f} \pm {3:.4f}$\n$\\chi^2_\\nu={4:.3g}$".format(a, b, perr[0], perr[1], chisq / ndof),
+    va="top",
+    zorder=5,
+    bbox=dict(boxstyle="round", ec="black", fc="ghostwhite", linewidth=2.5*dx)
 )
 
-plt.text(0.5, (3 * yhat[1] + 2 * upper[1]) / 5,
-         r"$\chi^2_\nu={0:.3g}$".format(chisq / ndof),
-         zorder=5,
-         bbox=dict(boxstyle="round", ec="black", fc="ghostwhite", linewidth=dx)
-)
-
+# Overlay projections on plot
 plt.text(
     that[0] - dt,
     yhat[0],
