@@ -11,10 +11,14 @@ from scipy.stats import describe, chisquare, t
 from matplotlib import style
 style.use("seaborn")
 
+
 def model(t, a, b):
+    # Exponential growth law, $f(t) = a * (1 + b) ^ t$,
+    # where $a$ is the number of cases at $t=0$ and $b$ is the growth rate.
     return a * (1 + b) ** t
 
 def jacobian(t, a, b):
+    # df/dp for p=(a, b)
     return np.array([(1 + b) ** t,
                      (a * t * (1 + b) ** t) / (1 + b)]).T
 
@@ -102,7 +106,7 @@ lower = model(that, lwr_a, lwr_b)
 
 
 plt.text(0.5, (yhat[1] + 3 * upper[1]) / 4,
-         r"$y = ({0:.4f} \pm {2:.4f}) \times [1 + ({1:.4f} \pm {3:.4f})]^t$".format(a, b, perr[0], perr[1]),
+         r"$f(t) = ({0:.4f} \pm {2:.4f}) \times [1 + ({1:.4f} \pm {3:.4f})]^t$".format(a, b, perr[0], perr[1]),
          zorder=5,
          bbox=dict(boxstyle="round", ec="black", fc="ghostwhite", linewidth=2.5*dx)
 )

@@ -9,13 +9,15 @@ Ported from @psteinb's excellent chart for [Dresden, Germany](https://github.com
 
 ## About the Model
 
-The figure above is a least-squares fit to a power-law using the available data:
+The figure above is a least-squares fit the available data using the [exponential growth equation](
+https://en.wikipedia.org/wiki/Exponential_growth):
 
 ```math
 f(t) = a * (1 + b)^t
 ```
 
 where *f* is the number of COVID-19 cases and *t* is time, in days since the first reported cases.
+The two fitting parameters are *a* the number of cases at time *t*=0, and *b* the growth rate.
 The fitting process used in this analysis gives a covariance matrix for the model parameters (*a*
 and *b*). From the covariance matrix, it's possible to compute the one-standard-deviation (sigma)
 bounds on the parameters, assuming that the uncertainty on the number of COVID-19 cases for each day
