@@ -11,17 +11,34 @@ from scipy.stats import describe, chisquare, t
 from matplotlib import style
 style.use("seaborn")
 
+model = "exp"
 
-def model(t, a, b):
+def f_exp(t, a, b):
     # Exponential growth law, $f(t) = a * (1 + b) ^ t$,
     # where $a$ is the number of cases at $t=0$ and $b$ is the growth rate.
     return a * (1 + b) ** t
 
-def jacobian(t, a, b):
-    # df/dp for p=(a, b)
+def df_exp(t, a, b):
+    # Jacobian: df/dp for p=(a, b)
     return np.array([(1 + b) ** t,
                      (a * t * (1 + b) ** t) / (1 + b)]).T
 
+def f_log(t, a, b, c):
+    # Logistic growth law, $f(t) = c / (exp((b - t)/a) + 1)$
+    return c / (np.exp((b - t)/a) + 1)
+
+def df_log(t, a, b, c):
+    # Jacobian: df/dp for p=(a, b, c)
+    return np.array([c*(b - t)*np.exp((b - t)/a)/(a**2*(np.exp((b - t)/a) + 1)**2),
+                     -c*np.exp((b - t)/a)/(a*(np.exp((b - t)/a) + 1)**2),
+                     1/(np.exp((b - t)/a) + 1)]).T
+
+f  = f_exp
+df = df_exp
+
+if model == "log":
+    f  = f_log
+    df = df_log
 
 fig = plt.figure(figsize=(6, 4))
 plt.suptitle("COVID-19 Cases: Montgomery County, MD", fontweight="bold")
@@ -31,62 +48,58 @@ plt.ylabel("# Diagnosed Cases")
 
 # Data
 
-df = pd.read_csv("us_md_montgomery.csv")
+data = pd.read_csv("us_md_montgomery.csv")
 
-y = np.array(df["diagnosed"])
-start = strptime(df["date"].iloc[0], "%Y-%m-%d")
+y = np.array(data["diagnosed"])
+start = strptime(data["date"].iloc[0], "%Y-%m-%d")
 start = date(start.tm_year, start.tm_mon, start.tm_mday).toordinal()
-today = strptime(df["date"].iloc[-1], "%Y-%m-%d")
+today = strptime(data["date"].iloc[-1], "%Y-%m-%d")
 today = date(today.tm_year, today.tm_mon, today.tm_mday).toordinal()
 
 t = np.zeros_like(y)
 for i in range(len(y)):
-    day = strptime(df["date"].iloc[i], "%Y-%m-%d")
+    day = strptime(data["date"].iloc[i], "%Y-%m-%d")
     t[i] = date(day.tm_year, day.tm_mon, day.tm_mday).toordinal() - start
 
 plt.scatter(t, y, marker=".", s=10, color="k", zorder=10)
 
 # Levenburg-Marquardt Least-Squares Fit
 """
-Note that sigma represents the relative error associated with each data point. By default, curve_fit
+Note that sigma represents the relative error associated with each data point. By default, `curve_fit`
 will assume an array of ones (constant values imply no difference in error), which is probably
 incorrect: given sparsity of testing, there's considerable uncertainty, and the earlier numbers may
 be lower than the truth to a greater extent than the later numbers. Quantifying this error by some
 non-trivial means for each datapoint would produce much more realistic uncertainty bands in the
 final plots.
 """
-popt, pcov = curve_fit(model, t, y, sigma=None, method="lm", jac=jacobian)
-a, b = popt
+p, pcov = curve_fit(f, t, y, sigma=None, method="lm", jac=df)
 coef = describe(pcov)
 perr = np.sqrt(np.diag(pcov))
 
 # Reduced chi-square goodness of fit
 ## https://en.wikipedia.org/wiki/Reduced_chi-squared_statistic
 
-chisq, chip = chisquare(y, model(t, a, b))
-ndof = len(y) - len(popt) - 1
+chisq, chip = chisquare(y, f(t, *p))
+ndof = len(y) - len(p) - 1
 
 # Confidence Band: dfdp represents the partial derivatives of the model with respect to each parameter p (i.e., a and b)
 
-that = np.linspace(0, t[-1] + 7, 100)
-yhat = model(that, a, b)
+t_hat = np.linspace(0, t[-1] + 7, 100)
+y_hat = f(t_hat, *p)
 
-upr_a = a + perr[0]
-lwr_a = a - perr[0]
+upr_p = p + perr
+lwr_p = p - perr
 
-upr_b = b + perr[1]
-lwr_b = b - perr[1]
+upper = f(t_hat, *upr_p)
+lower = f(t_hat, *lwr_p)
 
-upper = model(that, upr_a, upr_b)
-lower = model(that, lwr_a, lwr_b)
-
-it = np.argsort(that)
-plt.plot(that[it], yhat[it], c="red", lw=1, zorder=5)
+it = np.argsort(t_hat)
+plt.plot(t_hat[it], y_hat[it], c="red", lw=1, zorder=5)
 plt.fill_between(
-    that[it], upper[it], yhat[it], edgecolor=None, facecolor="silver", zorder=1
+    t_hat[it], upper[it], y_hat[it], edgecolor=None, facecolor="silver", zorder=1
 )
 plt.fill_between(
-    that[it], lower[it], yhat[it], edgecolor=None, facecolor="silver", zorder=1
+    t_hat[it], lower[it], y_hat[it], edgecolor=None, facecolor="silver", zorder=1
 )
 
 # Predictions
@@ -97,49 +110,59 @@ dt = 14
 tomorrow = date.fromordinal(today + 1)
 nextWeek = date.fromordinal(today + 7)
 
-that = np.array([tomorrow.toordinal() - start, nextWeek.toordinal() - start])
-yhat = model(that, a, b)
+t_hat = np.array([tomorrow.toordinal() - start, nextWeek.toordinal() - start])
+y_hat = f(t_hat, *p)
 
-upper = model(that, upr_a, upr_b)
-lower = model(that, lwr_a, lwr_b)
+upper = f(t_hat, *upr_p)
+lower = f(t_hat, *lwr_p)
 
 # Overlay model on plot
-plt.text(0.5, 0.98 * upper[1],
-    "$f(t) = a (1 + b)^t$\n$a = {0:.4f} \pm {2:.4f}$\n$b = {1:.4f} \pm {3:.4f}$\n$\\chi^2_\\nu={4:.3g}$".format(a, b, perr[0], perr[1], chisq / ndof),
-    va="top",
-    zorder=5,
-    bbox=dict(boxstyle="round", ec="black", fc="ghostwhite", linewidth=2.5*dx)
-)
+if model == "exp":
+    plt.text(0.5, 0.98 * upper[1],
+             "$f(t) = a (1 + b)^t$\n$a = {0:.4f} \pm {2:.4f}$\n$b = {1:.4f} \pm {3:.4f}$\n$\\chi^2_\\nu={4:.3g}$".format(*p, *perr, chisq / ndof),
+             va="top",
+             zorder=5,
+             bbox=dict(boxstyle="round", ec="gray", fc="ghostwhite", linewidth=2.5*dx)
+    )
+elif model == "log":
+    plt.text(0.5, 0.98 * upper[1],
+             "$f(t) = c / (\exp((b - t)/a) + 1)$\n$a = {0:.4f} \pm {3:.4f}$\n$b = {1:.4f} \pm {4:.4f}$\n$c = {2:.4f} \pm {5:.4f}$\n$\\chi^2_\\nu={6:.3g}$".format(*p, *perr, chisq / ndof),
+             va="top",
+             zorder=5,
+             bbox=dict(boxstyle="round", ec="gray", fc="ghostwhite", linewidth=2.5*dx)
+    )
 
 # Overlay projections on plot
 plt.text(
-    that[0] - dt,
-    yhat[0],
+    t_hat[0] - dt,
+    y_hat[0],
     "{0}/{1}: ({2:.0f} < {3:.0f} < {4:.0f})".format(
-        tomorrow.month, tomorrow.day, lower[0], yhat[0], upper[0]
+        tomorrow.month, tomorrow.day, lower[0], y_hat[0], upper[0]
     ),
     va="center",
+    ha="center",
     zorder=5,
-    bbox=dict(boxstyle="round", ec="black", fc="ghostwhite", linewidth=dx)
+    bbox=dict(boxstyle="round", ec="gray", fc="ghostwhite", linewidth=dx)
 )
 
 plt.text(
-    that[1] - dt,
-    yhat[1],
+    t_hat[1] - dt,
+    y_hat[1],
     "{0}/{1}: ({2:.0f} < {3:.0f} < {4:.0f})".format(
-        nextWeek.month, nextWeek.day, lower[1], yhat[1], upper[1]
+        nextWeek.month, nextWeek.day, lower[1], y_hat[1], upper[1]
     ),
     va="center",
+    ha="center",
     zorder=5,
-    bbox=dict(boxstyle="round", ec="black", fc="ghostwhite", linewidth=dx)
+    bbox=dict(boxstyle="round", ec="gray", fc="ghostwhite", linewidth=dx)
 )
 
 hw = 12
-hl = that[1] / 100
+hl = t_hat[1] / 100
 
 plt.arrow(
-    that[0] - dt,
-    yhat[0],
+    t_hat[0] - dt,
+    y_hat[0],
     dt - dx + 0.0625,
     0,
     fc="black",
@@ -152,8 +175,8 @@ plt.arrow(
     zorder=2,
 )
 plt.arrow(
-    that[1] - dt,
-    yhat[1],
+    t_hat[1] - dt,
+    y_hat[1],
     dt - dx + 0.0625,
     0,
     fc="black",
@@ -168,7 +191,7 @@ plt.arrow(
 
 # Plot Boundaries
 
-plt.xlim([0, that[-1]])
+plt.xlim([0, t_hat[-1]])
 plt.ylim([0, upper[-1]])
 
 # Save figure
