@@ -34,14 +34,13 @@ plt.ylabel("# Diagnosed Cases")
 df = pd.read_csv("us_md_montgomery.csv")
 
 y = np.array(df["diagnosed"])
-N = len(y)
 start = strptime(df["date"].iloc[0], "%Y-%m-%d")
 start = date(start.tm_year, start.tm_mon, start.tm_mday).toordinal()
 today = strptime(df["date"].iloc[-1], "%Y-%m-%d")
 today = date(today.tm_year, today.tm_mon, today.tm_mday).toordinal()
 
 t = np.zeros_like(y)
-for i in range(N):
+for i in range(len(y)):
     day = strptime(df["date"].iloc[i], "%Y-%m-%d")
     t[i] = date(day.tm_year, day.tm_mon, day.tm_mday).toordinal() - start
 
@@ -65,7 +64,7 @@ perr = np.sqrt(np.diag(pcov))
 ## https://en.wikipedia.org/wiki/Reduced_chi-squared_statistic
 
 chisq, chip = chisquare(y, model(t, a, b))
-ndof = N - 2
+ndof = len(y) - len(popt) - 1
 
 # Confidence Band: dfdp represents the partial derivatives of the model with respect to each parameter p (i.e., a and b)
 
