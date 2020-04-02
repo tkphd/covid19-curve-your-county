@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
 
+# Choose your model: "exp" for exponential, "log" for logistic
+
+model = "exp"
+
+# Everything else is details
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -11,7 +17,8 @@ from scipy.stats import describe, chisquare, t
 from matplotlib import style
 style.use("seaborn")
 
-model = "exp"
+
+# Define the model equation and its Jacobian
 
 def f_exp(t, a, b):
     # Exponential growth law, $f(t) = a * (1 + b) ^ t$,
@@ -35,10 +42,12 @@ def df_log(t, a, b, c):
 
 f  = f_exp
 df = df_exp
+imgname = "us_md_montgomery.png"
 
 if model == "log":
     f  = f_log
     df = df_log
+    imgname = "us_md_montgomery_logistic.png"
 
 fig = plt.figure(figsize=(6, 4))
 plt.suptitle("COVID-19 Cases: Montgomery County, MD", fontweight="bold")
@@ -196,4 +205,4 @@ plt.ylim([0, upper[-1]])
 
 # Save figure
 
-plt.savefig("us_md_montgomery.png", dpi=400, bbox_inches="tight")
+plt.savefig(imgname, dpi=400, bbox_inches="tight")
