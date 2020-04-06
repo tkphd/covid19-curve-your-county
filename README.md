@@ -54,3 +54,19 @@ least-squares fit.
 
 5. Share your findings to help others assess the spread of SARS-CoV-2, and to gauge the
    effectiveness of our collective response.
+
+## Statistics
+
+For non-linear curve fitting, the [reduced chi-squared
+statistic](https://en.wikipedia.org/wiki/Reduced_chi-squared_statistic) provides an indication of
+the goodness-of-fit. It is also instructive to look at the *residual*, or difference between the
+real value and its fitted estimate each day,
+
+``` math
+res = y - f(t)
+```
+
+These parameters are plotted below, with `ν = len(t) - len(p) - 1` degrees of freedom (*p* is the
+number of fitting *p*arameters).
+
+![res](residuals.png)
