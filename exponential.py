@@ -9,6 +9,9 @@ columns = ["diagnosed", "killed"]
 models = {"diagnosed": "log",
           "killed": "exp"}
 
+equations = {"diagnosed": "$D(t) = c / (\exp((b - t)/a) + 1)$\n$a = {0:.4f} \pm {3:.4f}$\n$b = {1:.4f} \pm {4:.4f}$\n$c = {2:.4f} \pm {5:.4f}$",
+             "killed": "$K(t) = a (1 + b)^t$\n$a = {0:.4f} \pm {2:.4f}$\n$b = {1:.4f} \pm {3:.4f}$"}
+
 # Set colors for the plot
 
 colors = {"diagnosed": "red",
@@ -107,7 +110,7 @@ for key in columns:
     non-trivial means for each datapoint would produce much more realistic uncertainty bands in the
     final plots.
     """
-    p, pcov = curve_fit(f, t, y, sigma=None, method="lm", jac=df)
+    p, pcov = curve_fit(f, t, y, sigma=None, method="lm", jac=df, maxfev=1000)
     coef = describe(pcov)
     perr = np.sqrt(np.diag(pcov))
 
@@ -155,22 +158,13 @@ for key in columns:
     lower = f(t_hat, *lwr_p)
 
     # Overlay model on plot
-    if model == "exp":
-        plt.text(0.5, 0.5 * (upper[1] + y_hat[1]),
-                 "$f(t) = a (1 + b)^t$\n$a = {0:.4f} \pm {2:.4f}$\n$b = {1:.4f} \pm {3:.4f}$".format(*p, *perr),
-                 color=colors[key],
-                 va="top",
-                 zorder=4,
-                 bbox=dict(boxstyle="round", ec="gray", fc="ghostwhite", linewidth=2.5*dx)
-        )
-    elif model == "log":
-        plt.text(0.5, 0.5 * (upper[1] + y_hat[1]),
-                 "$f(t) = c / (\exp((b - t)/a) + 1)$\n$a = {0:.4f} \pm {3:.4f}$\n$b = {1:.4f} \pm {4:.4f}$\n$c = {2:.4f} \pm {5:.4f}$".format(*p, *perr),
-                 color=colors[key],
-                 va="top",
-                 zorder=4,
-                 bbox=dict(boxstyle="round", ec="gray", fc="ghostwhite", linewidth=2.5*dx)
-        )
+    plt.text(0.5, 0.5 * (upper[1] + y_hat[1]),
+             equations[key].format(*p, *perr),
+             color=colors[key],
+             va="top",
+             zorder=4,
+             bbox=dict(boxstyle="round", ec="gray", fc="ghostwhite", linewidth=2.5*dx)
+    )
 
     # Overlay projections on plot
     plt.text(
@@ -243,7 +237,7 @@ plt.ylim([0, y_max])
 
 # Save figure
 
-plt.legend(loc="lower left")
+plt.legend(loc="center left")
 plt.savefig(imgname, dpi=400, bbox_inches="tight")
 plt.close()
 
@@ -272,4 +266,3 @@ plt.legend(loc="best")
 plt.xlim([0, len(y)])
 plt.savefig("residuals.png", dpi=400, bbox_inches="tight")
 plt.close()
-
