@@ -9,8 +9,8 @@ columns = ["diagnosed", "killed"]
 models = {"diagnosed": "log",
           "killed": "exp"}
 
-equations = {"diagnosed": "$D(t) = c / (\exp((b - t)/a) + 1)$\n$a = {0:.4f} \pm {3:.4f}$\n$b = {1:.4f} \pm {4:.4f}$\n$c = {2:.4f} \pm {5:.4f}$",
-             "killed": "$K(t) = a (1 + b)^t$\n$a = {0:.4f} \pm {2:.4f}$\n$b = {1:.4f} \pm {3:.4f}$"}
+equations = {"exp": "$f(t) = a (1 + b)^t$\n$a = {0:.4f} \pm {2:.4f}$\n$b = {1:.4f} \pm {3:.4f}$",
+             "log": "$f(t) = c / (\exp((b - t)/a) + 1)$\n$a = {0:.4f} \pm {3:.4f}$\n$b = {1:.4f} \pm {4:.4f}$\n$c = {2:.4f} \pm {5:.4f}$"}
 
 # Set colors for the plot
 
@@ -159,7 +159,7 @@ for key in columns:
 
     # Overlay model on plot
     plt.text(0.5, 0.5 * (upper[1] + y_hat[1]),
-             equations[key].format(*p, *perr),
+             equations[models[key]].format(*p, *perr),
              color=colors[key],
              va="top",
              zorder=4,
