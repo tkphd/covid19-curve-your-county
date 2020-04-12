@@ -128,8 +128,11 @@ for key in columns:
     t_hat = np.linspace(0, t[-1] + 7, 100)
     y_hat = f(t_hat, *p)
 
-    upr_p = p + perr
-    lwr_p = p - perr
+    tmperr = perr
+    if (models[key] == "log"):
+        tmperr[1] *= -1
+    upr_p = p + tmperr
+    lwr_p = p - tmperr
 
     upper = f(t_hat, *upr_p)
     lower = f(t_hat, *lwr_p)
