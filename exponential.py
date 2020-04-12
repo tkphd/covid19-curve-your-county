@@ -162,7 +162,7 @@ for key in columns:
     lower = f(t_hat, *lwr_p)
 
     # Overlay model on plot
-    plt.text(0.5, 0.5 * (upper[1] + y_hat[1]),
+    plt.text(0.5, max(1000, 0.5 * (upper[1] + y_hat[1])),
              equations[models[key]].format(*p, *perr),
              color=colors[key],
              va="top",
@@ -193,7 +193,7 @@ for key in columns:
         color=colors[key],
         va="center",
         ha="center",
-        zorder=4,
+        zorder=3,
         bbox=dict(boxstyle="round", ec="gray", fc="ghostwhite", linewidth=dx)
     )
 
@@ -212,8 +212,9 @@ for key in columns:
         overhang=dx,
         length_includes_head=True,
         linewidth=0.5,
-        zorder=2,
+        zorder=3,
     )
+
     plt.arrow(
         t_hat[1] - dt,
         y_hat[1],
