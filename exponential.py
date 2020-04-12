@@ -10,7 +10,7 @@ models = {"diagnosed": "log",
           "killed": "exp"}
 
 equations = {"exp": "$f(t) = a (1 + b)^t$\n$a = {0:.4f} \pm {2:.4f}$\n$b = {1:.4f} \pm {3:.4f}$",
-             "log": "$f(t) = c / (\exp((b - t)/a) + 1)$\n$a = {0:.4f} \pm {3:.4f}$\n$b = {1:.4f} \pm {4:.4f}$\n$c = {2:.4f} \pm {5:.4f}$"}
+             "log": "$f(t) = c / (\exp((b - t)/a) + 1)$\n$a = {0:.4f} \pm {3:.4f}$\n$b = {1:.4f} \mp {4:.4f}$\n$c = {2:.4f} \pm {5:.4f}$"}
 
 # Set colors for the plot
 
@@ -128,11 +128,12 @@ for key in columns:
     t_hat = np.linspace(0, t[-1] + 7, 100)
     y_hat = f(t_hat, *p)
 
-    tmperr = perr
     if (models[key] == "log"):
-        tmperr[1] *= -1
-    upr_p = p + tmperr
-    lwr_p = p - tmperr
+        perr[1] *= -1
+    upr_p = p + perr
+    lwr_p = p - perr
+    if (models[key] == "log"):
+        perr[1] *= -1
 
     upper = f(t_hat, *upr_p)
     lower = f(t_hat, *lwr_p)
