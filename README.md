@@ -7,10 +7,14 @@ Ported from @psteinb's excellent chart for [Dresden, Germany](https://github.com
 ![MoCo](us_md_montgomery.png)
 *Data source: [Maryland Department of Health](https://coronavirus.maryland.gov/) and [@MontgomeryCoMD](https://twitter.com/MontgomeryCoMD)*
 
+For daily updates, please click through to my [Twitter thread](https://twitter.com/tkphd/status/1247542720517804032).
+
 ## About the Model
 
-The figure above is a least-squares fit to the available data. The number of deaths due to COVID-19 is modeled using the [exponential growth equation](
-https://en.wikipedia.org/wiki/Exponential_growth), `f(t)`, while the number of confirmed cases uses a [logistic function]() `g(t)`.
+The figure above is a least-squares fit to the available data. The number of deaths due to COVID-19
+is modeled using the [exponential growth equation](
+https://en.wikipedia.org/wiki/Exponential_growth), `f(t)`, while the number of confirmed cases uses
+a [logistic function](https://en.wikipedia.org/wiki/Logistic_function) `g(t)`.
 
 ```math
 f(t) = a * (1 + b)^t
@@ -18,11 +22,13 @@ g(t) = c / (1 + exp((b - t) / a))
 ```
 
 where *t* is time, in days since the first reported cases. The fitting parameters are *a*, *b*, and
-*c*. The fitting process used in this analysis gives a covariance matrix for the model parameters.
-From the covariance matrix, it's possible to compute the one-standard-deviation (sigma) bounds on
-the parameters, assuming that the uncertainty on the number of COVID-19 cases for each day is the
-same.
+*c*. For the exponential, *a* is the initial number of cases and *b* is the growth rate. For the
+logistic, *a* is the reciprocal of the growth rate (steepness), *b* is the time-ccordinate of the
+inflection point, and *c* is the size of the population.
 
+The fitting process used in this analysis gives a covariance matrix for the model parameters. From
+the covariance matrix, it's possible to compute the one-standard-deviation (sigma) bounds on the
+parameters, assuming that the uncertainty on the number of COVID-19 cases for each day is the same.
 The gray bands are the plus-one-sigma (upper) and minus-one-sigma (lower) deviations from the
 least-squares fit.
 
@@ -70,3 +76,7 @@ These parameters are plotted below, with `ν = len(t) - len(p) - 1` degrees of f
 number of fitting *p*arameters).
 
 ![res](residuals.png)
+
+## Contact
+
+Please DM me on [Twitter](https://twitter.com/tkphd).

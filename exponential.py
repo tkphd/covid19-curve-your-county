@@ -10,7 +10,7 @@ models = {"diagnosed": "log",
           "killed": "exp"}
 
 equations = {"exp": "$f(t) = a (1 + b)^t$\n$a = {0:.4f} \pm {2:.4f}$\n$b = {1:.4f} \pm {3:.4f}$",
-             "log": "$f(t) = c / (\exp((b - t)/a) + 1)$\n$a = {0:.4f} \pm {3:.4f}$\n$b = {1:.4f} \mp {4:.4f}$\n$c = {2:.4f} \pm {5:.4f}$"}
+             "log": "$f(t) = c / (1 + \exp((b - t)/a))$\n$a = {0:.4f} \pm {3:.4f}$\n$b = {1:.4f} \mp {4:.4f}$\n$c = {2:.4f} \pm {5:.4f}$"}
 
 # Set colors for the plot
 
