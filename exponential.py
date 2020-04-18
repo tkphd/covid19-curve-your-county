@@ -9,8 +9,8 @@ columns = ["diagnosed", "killed"]
 models = {"diagnosed": "log",
           "killed": "exp"}
 
-equations = {"exp": "$f(t) = a (1 + b)^t$\n$a = {0:.4f} \pm {2:.4f}$\n$b = {1:.4f} \pm {3:.4f}$",
-             "log": "$f(t) = c / (1 + \exp((b - t)/a))$\n$a = {0:.4f} \pm {3:.4f}$\n$b = {1:.4f} \mp {4:.4f}$\n$c = {2:.4f} \pm {5:.4f}$"}
+equations = {"exp": "$f(t) = a (1 + b)^t$\n$a = {0:.4f} \pm {2}$\n$b = {1:.4f} \pm {3}$",
+             "log": "$f(t) = c / (1 + \exp((b - t)/a))$\n$a = {0} \pm {3}$\n$b = {1} \mp {4}$\n$c = {2:.0f}. \pm {5}$"}
 
 # Set colors for the plot
 
@@ -64,6 +64,15 @@ def df_log(t, a, b, c):
     return np.array([c*(b - t)*np.exp((b - t)/a)/(a**2*(np.exp((b - t)/a) + 1)**2),
                      -c*np.exp((b - t)/a)/(a*(np.exp((b - t)/a) + 1)**2),
                      1/(np.exp((b - t)/a) + 1)]).T
+
+def sigfig(x, n):
+    # Round a float, x, to n significant figures.
+    # Source: https://github.com/corriander/python-sigfig
+    n = int(n)
+
+    e = np.floor(np.log10(np.abs(x)) - n + 1) # exponent, 10 ** e
+    shifted_dp = x / (10 ** e) # decimal place shifted n d.p.
+    return np.around(shifted_dp) * (10 ** e) # round and revert
 
 fig = plt.figure(figsize=(6, 4))
 plt.suptitle("COVID-19 in Montgomery County, Maryland, USA", fontweight="bold")
@@ -161,9 +170,12 @@ for key in columns:
     upper = f(t_hat, *upr_p)
     lower = f(t_hat, *lwr_p)
 
+    s = sigfig(p, 4)
+    serr = sigfig(perr, 4)
+
     # Overlay model on plot
     plt.text(0.5, max(1000, 0.5 * (upper[1] + y_hat[1])),
-             equations[models[key]].format(*p, *perr),
+             equations[models[key]].format(*s, *serr),
              color=colors[key],
              va="top",
              zorder=4,
