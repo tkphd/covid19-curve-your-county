@@ -9,8 +9,8 @@ columns = ["diagnosed", "killed"]
 models = {"diagnosed": "log",
           "killed": "exp"}
 
-equations = {"exp": "$f(t) = a (1 + b)^t$\n$a = {0:.4f} \pm {2}$\n$b = {1:.4f} \pm {3}$",
-             "log": "$f(t) = c / (1 + \exp((b - t)/a))$\n$a = {0} \pm {3}$\n$b = {1} \mp {4}$\n$c = {2:.0f}. \pm {5}$"}
+equations = {"exp": "$f(t) = a (1 + b)^t$\n$a = {0:.4f} \pm {2:.5f}$\n$b = {1:.4f} \pm {3:.6f}$",
+             "log": "$f(t) = c / (1 + \exp((b - t)/a))$\n$a = {0:.3f} \pm {3:.4f}$\n$b = {1:.2f} \mp {4:.4f}$\n$c = {2:.0f}. \pm {5:.2f}$"}
 
 # Set colors for the plot
 
