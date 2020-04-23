@@ -283,3 +283,21 @@ plt.legend(loc="best")
 plt.xlim([0, len(y)])
 plt.savefig("residuals.png", dpi=400, bbox_inches="tight")
 plt.close()
+
+# === Increment vs Cases ===
+
+fig = plt.figure(figsize=(6, 4))
+plt.suptitle("COVID-19 in Montgomery County, Maryland, USA", fontweight="bold")
+plt.title("github.com/tkphd/covid19-curve-your-county", style="oblique")
+plt.xlabel("Number of Confirmed Cases")
+plt.ylabel("Increase in Diagnoses")
+
+x = np.array(data["diagnosed"])
+y = np.array(x)
+
+for i in np.arange(1, len(x), 1):
+    y[i] -= x[i-1]
+
+plt.scatter(x, y)
+plt.savefig("increment.png", dpi=400, bbox_inches="tight")
+plt.close()
