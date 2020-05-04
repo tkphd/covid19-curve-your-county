@@ -7,7 +7,7 @@ columns = ["diagnosed", "killed"]
 # Specify which model to use: "exp" for exponential, "log" for logistic
 
 models = {"diagnosed": "log",
-          "killed": "exp"}
+          "killed": "log"}
 
 equations = {"exp": "$f(t) = a (1 + b)^t$\n$a = {0:.4f} \pm {2:.5f}$\n$b = {1:.4f} \pm {3:.6f}$",
              "log": "$f(t) = c / (1 + \exp((b - t)/a))$\n$a = {0:.3f} \pm {3:.4f}$\n$b = {1:.2f} \mp {4:.4f}$\n$c = {2:.0f}. \pm {5:.2f}$"}
@@ -175,7 +175,8 @@ for key in columns:
 
     # Overlay model on plot
     plt.text(0.5, max(1000, 0.5 * (upper[1] + y_hat[1])),
-             equations[models[key]].format(*s, *serr),
+              equations[models[key]].format(*s, *serr),
+             fontsize=7,
              color=colors[key],
              va="top",
              zorder=4,
@@ -196,18 +197,18 @@ for key in columns:
         bbox=dict(boxstyle="round", ec="gray", fc="ghostwhite", linewidth=dx)
     )
 
-    plt.text(
-        t_hat[1] - dt,
-        y_hat[1],
-        "{0}/{1}: ({2:.0f} < {3:.0f} < {4:.0f})".format(
-            nextWeek.month, nextWeek.day, lower[1], y_hat[1], upper[1]
-        ),
-        color=colors[key],
-        va="center",
-        ha="center",
-        zorder=3,
-        bbox=dict(boxstyle="round", ec="gray", fc="ghostwhite", linewidth=dx)
-    )
+    # plt.text(
+    #     t_hat[1] - dt,
+    #     y_hat[1],
+    #     "{0}/{1}: ({2:.0f} < {3:.0f} < {4:.0f})".format(
+    #         nextWeek.month, nextWeek.day, lower[1], y_hat[1], upper[1]
+    #     ),
+    #     color=colors[key],
+    #     va="center",
+    #     ha="center",
+    #     zorder=3,
+    #     bbox=dict(boxstyle="round", ec="gray", fc="ghostwhite", linewidth=dx)
+    # )
 
     hw = 12
     hl = t_hat[1] / 100
@@ -227,20 +228,20 @@ for key in columns:
         zorder=3,
     )
 
-    plt.arrow(
-        t_hat[1] - dt,
-        y_hat[1],
-        dt - dx + 0.0625,
-        0,
-        fc="black",
-        ec="black",
-        head_width=hw,
-        head_length=hl,
-        overhang=dx,
-        length_includes_head=True,
-        linewidth=0.5,
-        zorder=2,
-    )
+    # plt.arrow(
+    #     t_hat[1] - dt,
+    #     y_hat[1],
+    #     dt - dx + 0.0625,
+    #     0,
+    #     fc="black",
+    #     ec="black",
+    #     head_width=hw,
+    #     head_length=hl,
+    #     overhang=dx,
+    #     length_includes_head=True,
+    #     linewidth=0.5,
+    #     zorder=2,
+    # )
 
     if t_hat[-1] > t_max:
         t_max = t_hat[-1]
