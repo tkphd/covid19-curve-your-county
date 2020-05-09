@@ -159,7 +159,7 @@ for key in columns:
     # Predictions
 
     dx = 0.25
-    dt = 17
+    dt = 21
 
     tomorrow = date.fromordinal(today + 1)
     nextWeek = date.fromordinal(today + 7)
