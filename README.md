@@ -12,9 +12,11 @@ For daily updates, please click through to my [Twitter thread](https://twitter.c
 ## About the Model
 
 The figure above is a least-squares fit to the available data. The number of deaths due to COVID-19
-is modeled using the [exponential growth equation](
-https://en.wikipedia.org/wiki/Exponential_growth), `f(t)`, while the number of confirmed cases uses
-a [logistic function](https://en.wikipedia.org/wiki/Logistic_function) `g(t)`.
+and the number of confirmed cases are modeled using a [logistic function](
+https://en.wikipedia.org/wiki/Logistic_function) `g(t)`. A simpler model, which was useful early in
+the pandemic, is the [exponential growth equation](https://en.wikipedia.org/wiki/Exponential_growth),
+`f(t)`. As of mid-April, neither model produces a "good" fit, but the logistic regression is somewhat
+better in terms of the residuals.
 
 ```math
 f(t) = a * (1 + b)^t
@@ -23,7 +25,7 @@ g(t) = c / (1 + exp((b - t) / a))
 
 where *t* is time, in days since the first reported cases. The fitting parameters are *a*, *b*, and
 *c*. For the exponential, *a* is the initial number of cases and *b* is the growth rate. For the
-logistic, *a* is the reciprocal of the growth rate (steepness), *b* is the time-ccordinate of the
+logistic, *a* is the reciprocal of the growth rate (steepness), *b* is the time-coordinate of the
 inflection point, and *c* is the size of the population.
 
 The fitting process used in this analysis gives a covariance matrix for the model parameters. From
