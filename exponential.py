@@ -77,7 +77,7 @@ def sigfig(x, n):
 fig = plt.figure(figsize=(6, 4))
 plt.suptitle("COVID-19 in Montgomery County, Maryland, USA", fontweight="bold")
 plt.title("github.com/tkphd/covid19-curve-your-county", style="oblique")
-plt.xlabel("Day of Record")
+plt.xlabel("Days since 5 March 2020")
 plt.ylabel("Number of People")
 
 # Data
