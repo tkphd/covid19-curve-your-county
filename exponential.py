@@ -188,66 +188,6 @@ for key in columns:
              bbox=dict(boxstyle="round", ec="gray", fc="ghostwhite", linewidth=2.5*dx)
     )
 
-    # Overlay projections on plot
-    plt.text(
-        t_hat[0] - dt,
-        y_hat[0],
-        "{0}/{1}: ({2:.0f} < {3:.0f} < {4:.0f})".format(
-            tomorrow.month, tomorrow.day, lower[0], y_hat[0], upper[0]
-        ),
-        color=colors[key],
-        va="center",
-        ha="center",
-        zorder=4,
-        bbox=dict(boxstyle="round", ec="gray", fc="ghostwhite", linewidth=dx)
-    )
-
-    # plt.text(
-    #     t_hat[1] - dt,
-    #     y_hat[1],
-    #     "{0}/{1}: ({2:.0f} < {3:.0f} < {4:.0f})".format(
-    #         nextWeek.month, nextWeek.day, lower[1], y_hat[1], upper[1]
-    #     ),
-    #     color=colors[key],
-    #     va="center",
-    #     ha="center",
-    #     zorder=3,
-    #     bbox=dict(boxstyle="round", ec="gray", fc="ghostwhite", linewidth=dx)
-    # )
-
-    hw = 12
-    hl = t_hat[1] / 100
-
-    plt.arrow(
-        t_hat[0] - dt,
-        y_hat[0],
-        dt - dx + 0.0625,
-        0,
-        fc="black",
-        ec="black",
-        head_width=hw,
-        head_length=hl,
-        overhang=dx,
-        length_includes_head=True,
-        linewidth=0.5,
-        zorder=3,
-    )
-
-    # plt.arrow(
-    #     t_hat[1] - dt,
-    #     y_hat[1],
-    #     dt - dx + 0.0625,
-    #     0,
-    #     fc="black",
-    #     ec="black",
-    #     head_width=hw,
-    #     head_length=hl,
-    #     overhang=dx,
-    #     length_includes_head=True,
-    #     linewidth=0.5,
-    #     zorder=2,
-    # )
-
     if t_hat[-1] > t_max:
         t_max = t_hat[-1]
     if upper[-1] > y_max:
