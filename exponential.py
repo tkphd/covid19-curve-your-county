@@ -83,6 +83,9 @@ plt.ylabel("Number of People")
 # Data
 
 data = pd.read_csv(dataname)
+dmax = 1
+for key in columns:
+    dmax = max(dmax, data[key].max())
 
 start = strptime(data["date"].iloc[0], "%Y-%m-%d")
 start = date(start.tm_year, start.tm_mon, start.tm_mday).toordinal()
@@ -91,6 +94,7 @@ today = date(today.tm_year, today.tm_mon, today.tm_mday).toordinal()
 
 t_max = 0
 y_max = 0
+y_off = 1 + 0.35 # offset for equation boxes
 
 for key in columns:
     model = models[key]
@@ -174,8 +178,9 @@ for key in columns:
     serr = sigfig(perr, 4)
 
     # Overlay model on plot
-    plt.text(0.5, max(1000, 0.5 * (upper[1] + y_hat[1])),
-              equations[models[key]].format(*s, *serr),
+    y_off -= 0.5
+    plt.text(1, y_off * dmax,
+             equations[models[key]].format(*s, *serr),
              fontsize=7,
              color=colors[key],
              va="top",
