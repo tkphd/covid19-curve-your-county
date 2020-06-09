@@ -236,30 +236,28 @@ fig = plt.figure(figsize=(6, 4))
 plt.suptitle("COVID-19 in Montgomery County, Maryland, USA", fontweight="bold")
 plt.title("github.com/tkphd/covid19-curve-your-county", style="oblique")
 plt.xlabel("Number of Confirmed Cases")
-plt.ylabel("Number of New Diagnoses")
+plt.ylabel("Increment")
 
-x = np.array(data["diagnosed"])
+key = "diagnosed"
+x = np.array(data[key])
 y = np.array(x)
 
-for i in np.arange(1, len(x), 1):
-    y[i] -= x[i-1]
+for i in np.arange(len(y)-1, 1, -1):
+    y[i] -= y[i-1]
 
-plt.scatter(x, y)
+plt.scatter(x, y, s=8, color=colors[key], label=key.capitalize())
+
+key = "killed"
+y = np.array(data[key])
+
+for i in np.arange(len(y)-1, 1, -1):
+    y[i] -= y[i-1]
+
+plt.scatter(x, y, s=8, color=colors[key], label=key.capitalize())
+
+plt.legend(loc="upper left")
+axes = plt.gca()
+axes.set_ylim(ymin=0)
 plt.savefig("increment.png", dpi=400, bbox_inches="tight")
 plt.close()
 
-fig = plt.figure(figsize=(6, 4))
-plt.suptitle("COVID-19 in Montgomery County, Maryland, USA", fontweight="bold")
-plt.title("github.com/tkphd/covid19-curve-your-county", style="oblique")
-plt.xlabel("Number of Confirmed Cases")
-plt.ylabel("Number of New Deaths")
-
-x = np.array(data["killed"])
-y = np.array(x)
-
-for i in np.arange(1, len(x), 1):
-    y[i] -= x[i-1]
-
-plt.scatter(x, y, )
-plt.savefig("increment-deaths.png", dpi=400, bbox_inches="tight")
-plt.close()
