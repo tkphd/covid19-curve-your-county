@@ -62,21 +62,11 @@ def f_log(t, a, b, c):
 
 
 def df_log(t, a, b, c):
-    # Jacobian: df/dp for p=(a, b, c)                              # SymPy-simplified quotients of exponentials
-    return np.array(
-        [
-            c
-            * (b - t)
-            / (
-                4 * a ** 2 * np.cosh((b - t) / (2 * a)) ** 2
-            ),  # c*(b - t)*np.exp((b - t)/a)/(a**2*(np.exp((b - t)/a) + 1)**2),
-            -c
-            / (
-                4 * a * np.cosh((b - t) / (2 * a)) ** 2
-            ),  # -c*np.exp((b - t)/a)/(a*(np.exp((b - t)/a) + 1)**2),
-            1 / (np.exp((b - t) / a) + 1),
-        ]
-    ).T
+    # Jacobian: df/dp for p=(a, b, c)
+    # SymPy-simplified quotients of exponentials
+    return np.array([c * (b - t) / (4 * a ** 2) * (1 / np.cosh((b - t) / (2 * a)) ** 2),  # c*(b - t)*np.exp((b - t)/a)/(a**2*(np.exp((b - t)/a) + 1)**2),
+                     -c / (4 * a) * (1 / np.cosh((b - t) / (2 * a)) ** 2),                # -c*np.exp((b - t)/a)/(a*(np.exp((b - t)/a) + 1)**2),
+                     1 / (np.exp((b - t) / a) + 1)]).T
 
 
 def sigfig(x, n):
