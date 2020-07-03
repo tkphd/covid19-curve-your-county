@@ -97,8 +97,6 @@ start = date(start.tm_year, start.tm_mon, start.tm_mday).toordinal()
 today = strptime(data["date"].iloc[-1], "%Y-%m-%d")
 today = date(today.tm_year, today.tm_mon, today.tm_mday).toordinal()
 
-t_max = 0
-y_max = 0
 y_off = 1 + 0.35  # offset for equation boxes
 
 for key in columns:
@@ -199,15 +197,13 @@ for key in columns:
         bbox=dict(boxstyle="round", ec="gray", fc="ghostwhite", linewidth=2.5 * dx),
     )
 
-    if t_hat[-1] > t_max:
-        t_max = t_hat[-1]
-    if upper[-1] > y_max:
-        y_max = upper[-1]
-
 # Plot Boundaries
 
-plt.xlim([0, t_max])
-plt.ylim([0, y_max])
+tmin, tmax = plt.xlim()
+plt.xlim([-0.2, tmax])
+
+ymin, ymax = plt.ylim()
+plt.ylim([-50, ymax])
 
 # Save figure
 
