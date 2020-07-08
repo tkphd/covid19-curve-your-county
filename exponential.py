@@ -200,7 +200,7 @@ for key in columns:
 # Plot Boundaries
 
 tmin, tmax = plt.xlim()
-plt.xlim([-0.2, tmax])
+plt.xlim([-0.2, tmax - 7])
 
 ymin, ymax = plt.ylim()
 plt.ylim([-50, ymax])
@@ -257,7 +257,7 @@ y = np.array(x)
 for i in np.arange(len(y) - 1, 1, -1):
     y[i] -= y[i - 1]
 
-plt.xlim([-20,np.max(x)+20])
+plt.xlim([-20,np.max(x) + 20])
 plt.ylim([0,320])
 
 plt.plot(x, y, "-o", markersize=2.5, linewidth=0.5, color=colors[key], label=key.capitalize())
