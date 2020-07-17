@@ -33,8 +33,9 @@ chi_sq_red = {"diagnosed": 1.0, "killed": 1.0}
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from time import strptime
+from calendar import month_name
 from datetime import date
+from time import strptime
 from string import Template
 from scipy.optimize import curve_fit
 from scipy.stats import describe, chisquare, t
@@ -275,3 +276,8 @@ axes = plt.gca()
 axes.set_ylim(ymin=0)
 plt.savefig("increment.png", dpi=400, bbox_inches="tight")
 plt.close()
+
+today = strptime(data["date"].iloc[-1], "%Y-%m-%d")
+
+print("Today, {0} {1}, @MontgomeryCoMD has seen {2} confirmed cases of #COVID19 (cumulative).".format(today.tm_mday, month_name[today.tm_mon], data["diagnosed"].iloc[-1]),
+      "The death toll stands at {0} #MoCo residents. #WearAMask #StayHomeSaveLives".format(data["killed"].iloc[-1]))
