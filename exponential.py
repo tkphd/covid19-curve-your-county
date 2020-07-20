@@ -279,5 +279,5 @@ plt.close()
 
 today = strptime(data["date"].iloc[-1], "%Y-%m-%d")
 
-print("Today, {0} {1}, @MontgomeryCoMD has seen {2} confirmed cases of #COVID19 (cumulative).".format(today.tm_mday, month_name[today.tm_mon], data["diagnosed"].iloc[-1]),
-      "The death toll stands at {0} #MoCo residents. #WearAMask #StayHomeSaveLives".format(data["killed"].iloc[-1]))
+print("Today, {0} {1}, @MontgomeryCoMD has seen {2:,} confirmed cases of #COVID19 (cumulative).".format(today.tm_mday, month_name[today.tm_mon], data["diagnosed"].iloc[-1]),
+      "The death toll stands at {0:,} #MoCo residents. #WearAMask #StayHomeSaveLives".format(data["killed"].iloc[-1]))
