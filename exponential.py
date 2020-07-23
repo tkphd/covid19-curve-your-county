@@ -245,11 +245,10 @@ plt.close()
 
 # === Plot Increments ===
 
-fig = plt.figure(figsize=(6, 4))
+fig, ax1 = plt.subplots(figsize=(6, 4))
 plt.suptitle("COVID-19 in Montgomery County, Maryland, USA", fontweight="bold")
 plt.title("github.com/tkphd/covid19-curve-your-county", style="oblique")
-plt.xlabel("Number of Confirmed Cases")
-plt.ylabel("Increment")
+ax1.set_xlabel("Number of Confirmed Cases")
 
 key = "diagnosed"
 x = np.array(data[key])
@@ -258,10 +257,11 @@ y = np.array(x)
 for i in np.arange(len(y) - 1, 1, -1):
     y[i] -= y[i - 1]
 
-plt.xlim([-20,np.max(x) + 20])
-plt.ylim([0,320])
+ax1.set_xlim([-20,np.max(x) + 20])
+ax1.set_ylim([0,320])
+ax1.set_ylabel("Increment of People {0}".format(key.capitalize()), color=colors[key])
 
-plt.plot(x, y, "-o", markersize=2.5, linewidth=0.5, color=colors[key], label=key.capitalize())
+ax1.plot(x, y, "-o", markersize=2.5, linewidth=0.5, color=colors[key], label=key.capitalize())
 
 key = "killed"
 y = np.array(data[key])
@@ -269,11 +269,11 @@ y = np.array(data[key])
 for i in np.arange(len(y) - 1, 1, -1):
     y[i] -= y[i - 1]
 
-plt.plot(x, y, "-o", markersize=2.5, linewidth=0.5, color=colors[key], label=key.capitalize())
+ax2 = ax1.twinx()
+ax2.set_ylim([0,32])
+ax2.set_ylabel("Increment of People {0}".format(key.capitalize()), color=colors[key])
+ax2.plot(x, y, "-o", markersize=2.5, linewidth=0.5, color=colors[key], label=key.capitalize())
 
-plt.legend(loc="upper left")
-axes = plt.gca()
-axes.set_ylim(ymin=0)
 plt.savefig("increment.png", dpi=400, bbox_inches="tight")
 plt.close()
 
