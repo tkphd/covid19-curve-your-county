@@ -95,6 +95,23 @@ for key in columns:
 
 start = strptime(data["date"].iloc[0], "%Y-%m-%d")
 start = date(start.tm_year, start.tm_mon, start.tm_mday).toordinal()
+
+# Before March 5, 2020, there were no COVID data available.
+# Keep track of when successive months began, in terms of days since the "epoch", 2020-03-05.
+
+months = [
+    ["April",     date(2020,  4, 1).toordinal() - start],
+    ["May",       date(2020,  5, 1).toordinal() - start],
+    ["June",      date(2020,  6, 1).toordinal() - start],
+    ["July",      date(2020,  7, 1).toordinal() - start],
+    # ["August",    date(2020,  8, 1).toordinal() - start],
+    # ["September", date(2020,  9, 1).toordinal() - start],
+    # ["October",   date(2020, 10, 1).toordinal() - start],
+    # ["November",  date(2020, 11, 1).toordinal() - start],
+    # ["December",  date(2020, 12, 1).toordinal() - start]
+]
+
+
 today = strptime(data["date"].iloc[-1], "%Y-%m-%d")
 today = date(today.tm_year, today.tm_mon, today.tm_mday).toordinal()
 
@@ -206,6 +223,12 @@ plt.xlim([-0.2, tmax - 7])
 ymin, ymax = plt.ylim()
 plt.ylim([-50, ymax])
 
+# Label months
+
+for month, day in months:
+    plt.plot((day, day), (0, ymax), c="gray", alpha=0.5, zorder=1)
+    plt.text(day + 1, 300, month, rotation=90, c="gray", alpha=0.5, zorder=1)
+
 # Save figure
 
 plt.legend(loc="center left")
@@ -274,6 +297,13 @@ for i in np.arange(len(y) - 1, 1, -1):
     y[i] -= y[i - 1]
 
 ax2.plot(x, y, "-o", markersize=2.5, linewidth=0.5, color=colors[key], label=key.capitalize())
+
+# Label months
+
+for month, day in months:
+    cases = data.loc[day, "diagnosed"]
+    plt.plot((cases, cases), (0, 32), c="gray", alpha=0.5, zorder=1)
+    plt.text(cases + 1, 1, month, rotation=90, c="gray", alpha=0.5, zorder=1)
 
 plt.savefig("increment.png", dpi=400, bbox_inches="tight")
 plt.close()
