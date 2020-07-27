@@ -65,6 +65,4 @@ if old_cases == new_cases and old_deaths == new_deaths:
     print("Nothing new.")
 else:
     todaysDate = datetime.date.today()
-    print("{0} cases and {1} deaths: {2} confirmed and {3} probable.".format(
-        new_cases, new_deaths, new_confirmed, new_related))
     print('{0},{1},{2},"https://coronavirus.maryland.gov/"'.format(todaysDate, new_deaths, new_cases))
