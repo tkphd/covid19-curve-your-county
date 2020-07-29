@@ -61,8 +61,8 @@ new_related = df["Related_Deaths"]["Montgomery"].item()
 old_cases = csv["diagnosed"][-1:].item()
 old_deaths = csv["killed"][-1:].item()
 
-if old_cases == new_cases and old_deaths == new_deaths:
-    print("Nothing new.")
-else:
+the_same = (old_cases == new_cases and old_deaths == new_deaths)
+
+if not the_same:
     todaysDate = datetime.date.today()
     print('{0},{1},{2},"https://coronavirus.maryland.gov/"'.format(todaysDate, new_deaths, new_cases))
