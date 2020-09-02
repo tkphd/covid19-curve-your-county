@@ -105,7 +105,7 @@ months = [
     ["June",      date(2020,  6, 1).toordinal() - start],
     ["July",      date(2020,  7, 1).toordinal() - start],
     ["August",    date(2020,  8, 1).toordinal() - start],
-    # ["September", date(2020,  9, 1).toordinal() - start],
+    ["September", date(2020,  9, 1).toordinal() - start],
     # ["October",   date(2020, 10, 1).toordinal() - start],
     # ["November",  date(2020, 11, 1).toordinal() - start],
     # ["December",  date(2020, 12, 1).toordinal() - start]
