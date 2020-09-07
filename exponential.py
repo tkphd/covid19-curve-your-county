@@ -285,6 +285,12 @@ ax1.set_ylim([0,320])
 ax1.set_ylabel("Increment of People {0}".format(key.capitalize()), color=colors[key])
 ax1.plot(x, y, "-o", markersize=2.5, linewidth=0.5, color=colors[key], label=key.capitalize())
 
+# Moving average
+window_width = 5
+cumsum_vec = np.cumsum(np.insert(y, 0, 0))
+mavg = (cumsum_vec[window_width:] - cumsum_vec[:-window_width]) / window_width
+ax1.plot(x[window_width-1:], mavg, color="blue", linewidth=0.75, label="{0}-day avg".format(window_width))
+
 key = "killed"
 ax2 = ax1.twinx()
 ax2.set_ylim([0,32])
