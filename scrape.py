@@ -31,10 +31,10 @@ opts.headless = True
 browser = Firefox(options=opts)
 browser.get("https://coronavirus.maryland.gov/")
 element = WebDriverWait(browser, 30).until(
-    EC.presence_of_element_located((By.XPATH, '//*[@id="ember91"]/div/table[1]'))
+    EC.presence_of_element_located((By.XPATH, '//*[@id="ember113"]/div/table[1]'))
 )
 
-covid_table = browser.find_elements_by_xpath('//*[@id="ember91"]/div/table[1]')[0]
+covid_table = browser.find_elements_by_xpath('//*[@id="ember113"]/div/table[1]')[0]
 
 
 data = [item.text for item in covid_table.find_elements_by_css_selector("th,td")]
