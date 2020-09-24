@@ -315,6 +315,15 @@ plt.savefig("increment.png", dpi=400, bbox_inches="tight")
 plt.close()
 
 today = strptime(data["date"].iloc[-1], "%Y-%m-%d")
+today = "{} {} {}".format(today.tm_mday, month_name[today.tm_mon], today.tm_year)
 
-print("Today, {0} {1}, @MontgomeryCoMD has seen {2:,} confirmed cases of #COVID19 (cumulative).".format(today.tm_mday, month_name[today.tm_mon], data["diagnosed"].iloc[-1]),
-      "The death toll stands at {0:,} #MoCo residents. #WearAMask #StayHomeSaveLives".format(data["killed"].iloc[-1]))
+print("Tweet body and figure alt-texts follow.\n")
+print("Today, {}, @MontgomeryCoMD has seen {:,} confirmed cases of #COVID19 (cumulative).".format(today, data["diagnosed"].iloc[-1]),
+      "The death toll stands at {:,} #MoCo residents. #WearAMask #StayHomeSaveLives\n".format(data["killed"].iloc[-1]))
+print("Raw number of COVID-19 cases and deaths in Montgomery County, Maryland, since 5 March 2020.",
+      "As of {}, there have been {:,} cases and {:,} deaths.\n".format(today, data["diagnosed"].iloc[-1], data["killed"].iloc[-1]))
+print("Increment in number of cases, and deaths, due to COVID-19 as a function of the cumulative number of cases.",
+      "Today, {}, there were {:,} new cases and {:,} new deaths.\n".format(today,
+                                                                       data["diagnosed"].iloc[-1] - data["diagnosed"].iloc[-2],
+                                                                       data["killed"].iloc[-1] - data["killed"].iloc[-2]))
+print("Send.")
