@@ -235,37 +235,6 @@ plt.legend(loc="center left")
 plt.savefig(imgname, dpi=400, bbox_inches="tight")
 plt.close()
 
-
-# === Plot residuals ===
-
-fig = plt.figure(figsize=(6, 4))
-plt.title("Residuals: $y - f(t)$")
-plt.xlabel("Day of Record")
-plt.ylabel("Residual")
-
-N = 5
-
-for key in columns:
-    y = residuals[key]
-    x = np.arange(0, len(y))
-    plt.bar(
-        x,
-        y,
-        align="edge",
-        color=colors[key],
-        label="{0}: $\\chi^2_\\nu={1:.3g}$".format(key.capitalize(), chi_sq_red[key]),
-    )
-    """
-    mov_avg = np.convolve(y, np.ones((N,))/N, mode='valid')
-    x = np.arange(N-3, len(y)-(N-3))
-    plt.scatter(x, mov_avg, color=colors[key])
-    """
-
-plt.legend(loc="best")
-plt.xlim([0, len(y)])
-plt.savefig("residuals.png", dpi=400, bbox_inches="tight")
-plt.close()
-
 # === Plot Increments ===
 
 fig, ax1 = plt.subplots(figsize=(6, 4))
