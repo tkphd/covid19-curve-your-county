@@ -286,13 +286,17 @@ plt.close()
 today = strptime(data["date"].iloc[-1], "%Y-%m-%d")
 today = "{} {} {}".format(today.tm_mday, month_name[today.tm_mon], today.tm_year)
 
+nCases = data["diagnosed"].iloc[-1]
+nKills = data["killed"].iloc[-1]
+
+dCases = nCases - data["diagnosed"].iloc[-2]
+dKills = nKills - data["killed"].iloc[-2]
+
 print("Tweet body and figure alt-texts follow.\n")
-print("Today, {}, @MontgomeryCoMD has seen {:,} confirmed cases of #COVID19 (cumulative).".format(today, data["diagnosed"].iloc[-1]),
-      "The death toll stands at {:,} #MoCo residents. #WearAMask #StayHomeSaveLives\n".format(data["killed"].iloc[-1]))
-print("Raw number of COVID-19 cases and deaths in Montgomery County, Maryland, since 5 March 2020.",
-      "As of {}, there have been {:,} cases and {:,} deaths.\n".format(today, data["diagnosed"].iloc[-1], data["killed"].iloc[-1]))
+print("Today, {}, @MontgomeryCoMD has seen {:,} confirmed cases of #COVID19 (cumulative).".format(today, nCases),
+      "The death toll stands at {:,} #MoCo residents. #WearAMask #StayHomeSaveLives\n".format(nKills))
+print("Number of COVID-19 cases and deaths in Montgomery County, Maryland, for every since 5 March 2020.",
+      "As of {}, there have been {:,} cases and {:,} deaths.\n".format(today, nCases, nKills))
 print("Increment in number of cases, and deaths, due to COVID-19 as a function of the cumulative number of cases.",
-      "Today, {}, there were {:,} new cases and {:,} new deaths.\n".format(today,
-                                                                       data["diagnosed"].iloc[-1] - data["diagnosed"].iloc[-2],
-                                                                       data["killed"].iloc[-1] - data["killed"].iloc[-2]))
+      "Today, {}, there were {:,} new cases and {:,} new death{}.\n".format(today, dCases, "no" if dKills == 0 else dKills, "" if dKills == 1 else "s"))
 print("Send.")
