@@ -298,5 +298,5 @@ print("Today, {}, @MontgomeryCoMD has seen {:,} confirmed cases of #COVID19 (cum
 print("Number of COVID-19 cases and deaths in Montgomery County, Maryland, for every since 5 March 2020.",
       "As of {}, there have been {:,} cases and {:,} deaths.\n".format(today, nCases, nKills))
 print("Increment in number of cases, and deaths, due to COVID-19 as a function of the cumulative number of cases.",
-      "Today, {}, there were {:,} new cases and {:,} new death{}.\n".format(today, dCases, "no" if dKills == 0 else dKills, "" if dKills == 1 else "s"))
+      "Today, {}, there were {:} new cases and {:} new death{}.\n".format(today, dCases, "no" if dKills == 0 else dKills, "" if dKills == 1 else "s"))
 print("Send.")
