@@ -65,9 +65,22 @@ def f_log(t, a, b, c):
 def df_log(t, a, b, c):
     # Jacobian: df/dp for p=(a, b, c)
     # SymPy-simplified quotients of exponentials
-    return np.array([c * (b - t) / (4 * a ** 2) * (1 / np.cosh((b - t) / (2 * a)) ** 2),  # c*(b - t)*np.exp((b - t)/a)/(a**2*(np.exp((b - t)/a) + 1)**2),
-                     -c / (4 * a) * (1 / np.cosh((b - t) / (2 * a)) ** 2),                # -c*np.exp((b - t)/a)/(a*(np.exp((b - t)/a) + 1)**2),
-                     1 / (np.exp((b - t) / a) + 1)]).T
+    return np.array(
+        [
+            c
+            * (b - t)
+            / (4 * a ** 2)
+            * (
+                1 / np.cosh((b - t) / (2 * a)) ** 2
+            ),  # c*(b - t)*np.exp((b - t)/a)/(a**2*(np.exp((b - t)/a) + 1)**2),
+            -c
+            / (4 * a)
+            * (
+                1 / np.cosh((b - t) / (2 * a)) ** 2
+            ),  # -c*np.exp((b - t)/a)/(a*(np.exp((b - t)/a) + 1)**2),
+            1 / (np.exp((b - t) / a) + 1),
+        ]
+    ).T
 
 
 def sigfig(x, n):
@@ -100,13 +113,13 @@ start = date(start.tm_year, start.tm_mon, start.tm_mday).toordinal()
 # Keep track of when successive months began, in terms of days since the "epoch", 2020-03-05.
 
 months = [
-    ["April",     date(2020,  4, 1).toordinal() - start],
-    ["May",       date(2020,  5, 1).toordinal() - start],
-    ["June",      date(2020,  6, 1).toordinal() - start],
-    ["July",      date(2020,  7, 1).toordinal() - start],
-    ["August",    date(2020,  8, 1).toordinal() - start],
-    ["September", date(2020,  9, 1).toordinal() - start],
-    ["October",   date(2020, 10, 1).toordinal() - start],
+    ["April", date(2020, 4, 1).toordinal() - start],
+    ["May", date(2020, 5, 1).toordinal() - start],
+    ["June", date(2020, 6, 1).toordinal() - start],
+    ["July", date(2020, 7, 1).toordinal() - start],
+    ["August", date(2020, 8, 1).toordinal() - start],
+    ["September", date(2020, 9, 1).toordinal() - start],
+    ["October", date(2020, 10, 1).toordinal() - start],
     # ["November",  date(2020, 11, 1).toordinal() - start],
     # ["December",  date(2020, 12, 1).toordinal() - start]
 ]
@@ -216,7 +229,6 @@ for key in columns:
     )
 
 # Plot Boundaries
-
 tmin, tmax = plt.xlim()
 plt.xlim([-0.2, tmax - 7])
 
@@ -224,13 +236,11 @@ ymin, ymax = plt.ylim()
 plt.ylim([-50, ymax])
 
 # Label months
-
 for month, day in months:
     plt.plot((day, day), (0, ymax), c="gray", alpha=0.5, zorder=1)
     plt.text(day + 1, 300, month, rotation=90, c="gray", alpha=0.5, zorder=1)
 
 # Save figure
-
 plt.legend(loc="center left")
 plt.savefig(imgname, dpi=400, bbox_inches="tight")
 plt.close()
@@ -249,20 +259,28 @@ for i in np.arange(len(y) - 1, 1, -1):
     y[i] -= y[i - 1]
 
 ax1.set_xlabel("Number of Confirmed Cases")
-ax1.set_xlim([-20,np.max(x) + 20])
-ax1.set_ylim([0,320])
+ax1.set_xlim([-20, np.max(x) + 20])
+ax1.set_ylim([0, 320])
 ax1.set_ylabel("Increment of People {0}".format(key.capitalize()), color=colors[key])
-ax1.plot(x, y, "-o", markersize=2.5, linewidth=0.5, color=colors[key], label=key.capitalize())
+ax1.plot(
+    x, y, "-o", markersize=2.5, linewidth=0.5, color=colors[key], label=key.capitalize()
+)
 
 # Moving average
 window_width = 5
 cumsum_vec = np.cumsum(np.insert(y, 0, 0))
 mavg = (cumsum_vec[window_width:] - cumsum_vec[:-window_width]) / window_width
-ax1.plot(x[window_width-1:], mavg, color="blue", linewidth=0.75, label="{0}-day avg".format(window_width))
+ax1.plot(
+    x[window_width - 1 :],
+    mavg,
+    color="blue",
+    linewidth=0.75,
+    label="{0}-day avg".format(window_width),
+)
 
 key = "killed"
 ax2 = ax1.twinx()
-ax2.set_ylim([0,32])
+ax2.set_ylim([0, 32])
 ax2.set_ylabel("Increment of People {0}".format(key.capitalize()), color=colors[key])
 ax2.grid(b=False)
 
@@ -271,10 +289,11 @@ y = np.array(data[key])
 for i in np.arange(len(y) - 1, 1, -1):
     y[i] -= y[i - 1]
 
-ax2.plot(x, y, "-o", markersize=2.5, linewidth=0.5, color=colors[key], label=key.capitalize())
+ax2.plot(
+    x, y, "-o", markersize=2.5, linewidth=0.5, color=colors[key], label=key.capitalize()
+)
 
 # Label months
-
 for month, day in months:
     cases = data.loc[day, "diagnosed"]
     plt.plot((cases, cases), (0, 32), c="gray", alpha=0.5, zorder=1)
@@ -282,6 +301,8 @@ for month, day in months:
 
 plt.savefig("increment.png", dpi=400, bbox_inches="tight")
 plt.close()
+
+# === Write the Tweet ===
 
 today = strptime(data["date"].iloc[-1], "%Y-%m-%d")
 today = "{} {} {}".format(today.tm_mday, month_name[today.tm_mon], today.tm_year)
@@ -293,10 +314,24 @@ dCases = nCases - data["diagnosed"].iloc[-2]
 dKills = nKills - data["killed"].iloc[-2]
 
 print("Tweet body and figure alt-texts follow.\n")
-print("Today, {}, @MontgomeryCoMD has seen {:,} confirmed cases of #COVID19 (cumulative).".format(today, nCases),
-      "The death toll stands at {:,} #MoCo residents. #WearAMask #StayHomeSaveLives\n".format(nKills))
-print("Number of COVID-19 cases and deaths in Montgomery County, Maryland, for every since 5 March 2020.",
-      "As of {}, there have been {:,} cases and {:,} deaths.\n".format(today, nCases, nKills))
-print("Increment in number of cases, and deaths, due to COVID-19 as a function of the cumulative number of cases.",
-      "Today, {}, there were {:} new cases and {:} new death{}.\n".format(today, dCases, "no" if dKills == 0 else dKills, "" if dKills == 1 else "s"))
+print(
+    "Today, {}, @MontgomeryCoMD has seen {:,} confirmed cases of #COVID19 (cumulative).".format(
+        today, nCases
+    ),
+    "The death toll stands at {:,} #MoCo residents. #WearAMask #StayHomeSaveLives\n".format(
+        nKills
+    ),
+)
+print(
+    "Number of COVID-19 cases and deaths in Montgomery County, Maryland, for every since 5 March 2020.",
+    "As of {}, there have been {:,} cases and {:,} deaths.\n".format(
+        today, nCases, nKills
+    ),
+)
+print(
+    "Increment in number of cases, and deaths, due to COVID-19 as a function of the cumulative number of cases.",
+    "Today, {}, there were {:} new cases and {:} new death{}.\n".format(
+        today, dCases, "no" if dKills == 0 else dKills, "" if dKills == 1 else "s"
+    ),
+)
 print("Send.")
