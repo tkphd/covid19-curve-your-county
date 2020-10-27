@@ -262,9 +262,8 @@ ax1.set_xlabel("Number of Confirmed Cases")
 ax1.set_xlim([-20, np.max(x) + 20])
 ax1.set_ylim([0, 320])
 ax1.set_ylabel("Increment of People {0}".format(key.capitalize()), color=colors[key])
-ax1.plot(
-    x, y, "-o", markersize=2.5, linewidth=0.5, color=colors[key], label=key.capitalize()
-)
+ax1.scatter(x, y, s=2.5, color=colors[key], label=key.capitalize(), zorder=5)
+ax1.plot(x, y, linewidth=0.4, color="maroon", label=None, zorder=1)
 
 # Moving average
 window_width = 5
@@ -273,8 +272,8 @@ mavg = (cumsum_vec[window_width:] - cumsum_vec[:-window_width]) / window_width
 ax1.plot(
     x[window_width - 1 :],
     mavg,
-    color="blue",
-    linewidth=0.75,
+    color=colors[key],
+    linewidth=0.8,
     label="{0}-day avg".format(window_width),
 )
 
@@ -289,8 +288,17 @@ y = np.array(data[key])
 for i in np.arange(len(y) - 1, 1, -1):
     y[i] -= y[i - 1]
 
+ax2.scatter(x, y, s=2.5, color=colors[key], label=key.capitalize(), zorder=5)
+ax2.plot(x, y, linewidth=0.4, color="gray", label=None, zorder=1)
+
+cumsum_vec = np.cumsum(np.insert(y, 0, 0))
+mavg = (cumsum_vec[window_width:] - cumsum_vec[:-window_width]) / window_width
 ax2.plot(
-    x, y, "-o", markersize=2.5, linewidth=0.5, color=colors[key], label=key.capitalize()
+    x[window_width - 1 :],
+    mavg,
+    color=colors[key],
+    linewidth=0.8,
+    label="{0}-day avg".format(window_width),
 )
 
 # Label months
