@@ -25,16 +25,17 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
+xpath = '//*[@id="ember110"]/div/table[1]'
 
 opts = Options()
 opts.headless = True
 browser = Firefox(options=opts)
 browser.get("https://coronavirus.maryland.gov/")
 element = WebDriverWait(browser, 30).until(
-    EC.presence_of_element_located((By.XPATH, '//*[@id="ember113"]/div/table[1]'))
+    EC.presence_of_element_located((By.XPATH, xpath))
 )
 
-covid_table = browser.find_elements_by_xpath('//*[@id="ember113"]/div/table[1]')[0]
+covid_table = browser.find_elements_by_xpath(xpath)[0]
 
 
 data = [item.text for item in covid_table.find_elements_by_css_selector("th,td")]
