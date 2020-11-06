@@ -7,6 +7,7 @@ columns = ["diagnosed", "killed"]
 # Specify which model to use: "exp" for exponential, "log" for logistic
 
 models = {"diagnosed": "log", "killed": "log"}
+labels = {"diagnosed": "Cases", "killed": "Deaths"}
 
 equations = {
     "exp": "$f(t) = a (1 + b)^t$\n$a = {0:.4f} \pm {2:.5f}$\n$b = {1:.4f} \pm {3:.6f}$",
@@ -147,85 +148,7 @@ for key in columns:
         t[i] = date(day.tm_year, day.tm_mon, day.tm_mday).toordinal() - start
 
     plt.scatter(
-        t, y, marker=".", s=10, color="white", edgecolors=colors[key], zorder=10
-    )
-
-    # Levenburg-Marquardt Least-Squares Fit
-    """
-    Note that sigma represents the relative error associated with each data point. By default, `curve_fit`
-    will assume an array of ones (constant values imply no difference in error), which is probably
-    incorrect: given sparsity of testing, there's considerable uncertainty, and the earlier numbers may
-    be lower than the truth to a greater extent than the later numbers. Quantifying this error by some
-    non-trivial means for each datapoint would produce much more realistic uncertainty bands in the
-    final plots.
-    """
-    p, pcov = curve_fit(f, t, y, sigma=None, method="lm", jac=df, maxfev=1000)
-    coef = describe(pcov)
-    perr = np.sqrt(np.diag(pcov))
-
-    # Reduced chi-square goodness of fit
-    ## https://en.wikipedia.org/wiki/Reduced_chi-squared_statistic
-
-    chisq, chip = chisquare(y, f(t, *p))
-    ndof = len(y) - len(p) - 1
-
-    residuals[key] = f(t, *p) - y
-    chi_sq_red[key] = chisq / ndof
-
-    # Confidence Band: dfdp represents the partial derivatives of the model with respect to each parameter p (i.e., a and b)
-
-    t_hat = np.linspace(0, t[-1] + 7, 100)
-    y_hat = f(t_hat, *p)
-
-    if models[key] == "log":
-        perr[1] *= -1
-    upr_p = p + perr
-    lwr_p = p - perr
-    if models[key] == "log":
-        perr[1] *= -1
-
-    upper = f(t_hat, *upr_p)
-    lower = f(t_hat, *lwr_p)
-
-    it = np.argsort(t_hat)
-    plt.plot(
-        t_hat[it], y_hat[it], c=colors[key], lw=1, zorder=5, label=key.capitalize()
-    )
-    plt.fill_between(
-        t_hat[it], upper[it], y_hat[it], edgecolor=None, facecolor="silver", zorder=1
-    )
-    plt.fill_between(
-        t_hat[it], lower[it], y_hat[it], edgecolor=None, facecolor="silver", zorder=1
-    )
-
-    # Predictions
-
-    dx = 0.25
-    dt = 21
-
-    tomorrow = date.fromordinal(today + 1)
-    nextWeek = date.fromordinal(today + 7)
-
-    t_hat = np.array([tomorrow.toordinal() - start, nextWeek.toordinal() - start])
-    y_hat = f(t_hat, *p)
-
-    upper = f(t_hat, *upr_p)
-    lower = f(t_hat, *lwr_p)
-
-    s = sigfig(p, 4)
-    serr = sigfig(perr, 4)
-
-    # Overlay model on plot
-    y_off -= 0.5
-    plt.text(
-        1,
-        y_off * dmax,
-        equations[models[key]].format(*s, *serr),
-        fontsize=7,
-        color=colors[key],
-        va="top",
-        zorder=4,
-        bbox=dict(boxstyle="round", ec="gray", fc="ghostwhite", linewidth=2.5 * dx),
+        t, y, marker=".", s=10, color="white", edgecolors=colors[key], zorder=10, label=labels[key]
     )
 
 # Plot Boundaries
