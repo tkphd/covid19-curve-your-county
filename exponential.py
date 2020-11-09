@@ -244,12 +244,14 @@ nKills = data["killed"].iloc[-1]
 dCases = nCases - data["diagnosed"].iloc[-2]
 dKills = nKills - data["killed"].iloc[-2]
 
-print("Tweet body and figure alt-texts follow.\n")
 print(
-    "Today, {}, @MontgomeryCoMD has seen {:,} confirmed cases of #COVID19 (cumulative).".format(
-        today, nCases
+    "\nToday, {}, there were {} new cases and {} new death{} in @MontgomeryCoMD.".format(
+        today, dCases, "no" if dKills == 0 else dKills, "" if dKills == 1 else "s"
     ),
-    "The death toll stands at {:,} #MoCo residents. #WearAMask #StayHomeSaveLives\n".format(
+    "Since March 5, 2020, we have seen {:,} confirmed cases of #COVID19 (cumulative),".format(
+        nCases
+    ),
+    "and {:,} #MoCo residents have been killed. #WearAMask #StayHomeSaveLives\n".format(
         nKills
     ),
 )
