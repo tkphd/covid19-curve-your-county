@@ -121,7 +121,7 @@ months = [
     ["August", date(2020, 8, 1).toordinal() - start],
     ["September", date(2020, 9, 1).toordinal() - start],
     ["October", date(2020, 10, 1).toordinal() - start],
-    ["November",  date(2020, 11, 1).toordinal() - start],
+    ["November", date(2020, 11, 1).toordinal() - start],
     # ["December",  date(2020, 12, 1).toordinal() - start]
 ]
 
@@ -148,7 +148,14 @@ for key in columns:
         t[i] = date(day.tm_year, day.tm_mon, day.tm_mday).toordinal() - start
 
     plt.scatter(
-        t, y, marker=".", s=10, color="white", edgecolors=colors[key], zorder=10, label=labels[key]
+        t,
+        y,
+        marker=".",
+        s=10,
+        color="white",
+        edgecolors=colors[key],
+        zorder=10,
+        label=labels[key],
     )
 
 # Plot Boundaries
@@ -253,17 +260,5 @@ print(
     ),
     "and {:,} #MoCo residents have been killed. #WearAMask #StayHomeSaveLives\n".format(
         nKills
-    ),
-)
-print(
-    "Number of COVID-19 cases and deaths in Montgomery County, Maryland, every day since 5 March 2020.",
-    "As of {}, there have been {:,} cases and {:,} deaths.\n".format(
-        today, nCases, nKills
-    ),
-)
-print(
-    "Increment in number of cases, and deaths, due to COVID-19 as a function of the cumulative number of cases.",
-    "Today, {}, there were {:} new cases and {:} new death{}.\n".format(
-        today, dCases, "no" if dKills == 0 else dKills, "" if dKills == 1 else "s"
     ),
 )
