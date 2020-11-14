@@ -190,7 +190,7 @@ for i in np.arange(len(y) - 1, 1, -1):
 
 ax1.set_xlabel("Number of Confirmed Cases")
 ax1.set_xlim([-20, np.max(x) + 20])
-ax1.set_ylim([0, 320])
+ax1.set_ylim([0, 450])
 ax1.set_ylabel("Increment of People {0}".format(key.capitalize()), color=colors[key])
 ax1.scatter(x, y, s=2.5, color=colors[key], label=key.capitalize(), zorder=5)
 ax1.plot(x, y, linewidth=0.4, color="maroon", label=None, zorder=1)
