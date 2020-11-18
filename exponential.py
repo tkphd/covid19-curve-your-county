@@ -251,14 +251,31 @@ nKills = data["killed"].iloc[-1]
 dCases = nCases - data["diagnosed"].iloc[-2]
 dKills = nKills - data["killed"].iloc[-2]
 
+print()
+
 print(
-    "\nToday, {}, there were {} new cases and {} new death{} in @MontgomeryCoMD.".format(
+    "Today, {}, there were {} new cases and {} new death{} in @MontgomeryCoMD.".format(
         today, dCases, "no" if dKills == 0 else dKills, "" if dKills == 1 else "s"
     ),
     "Since March 5, 2020, we have seen {:,} confirmed cases of #COVID19 (cumulative),".format(
         nCases
     ),
-    "and {:,} #MoCo residents have been killed. #WearAMask #StayHomeSaveLives\n".format(
+    "and {:,} #MoCo residents have been killed. #WearAMask #StayHomeSaveLives".format(
         nKills
     ),
 )
+
+print()
+
+print("Cumulative cases and deaths due to COVID-19 in Montgomery County, Maryland, since 5 March 2020.",
+      "Current total is {:,} infected and {:,} killed.".format(nCases, nKills),
+)
+
+print()
+
+print("Increment in cases and deaths due to COVID-19 in Montgomery County, Maryland, as a function of cumulative cases.",
+      "The increment for {}".format(today),
+      "is {:,} infections and {:,} deaths.".format(dCases, dKills),
+)
+
+print()
