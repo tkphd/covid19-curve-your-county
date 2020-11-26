@@ -31,21 +31,21 @@ chi_sq_red = {"diagnosed": 1.0, "killed": 1.0}
 
 # Everything else is details
 
+import locale
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from calendar import month_name
 from datetime import date
-from time import strptime
-from string import Template
+from matplotlib import style
 from scipy.optimize import curve_fit
 from scipy.stats import describe, chisquare, t
-from matplotlib import style
+from string import Template
+from time import strptime
 
 style.use("seaborn")
 
 # Define the model equation and its Jacobian
-
 
 def f_exp(t, a, b):
     # Exponential growth law, $f(t) = a * (1 + b) ^ t$,
