@@ -114,17 +114,44 @@ start = date(start.tm_year, start.tm_mon, start.tm_mday).toordinal()
 # Keep track of when successive months began, in terms of days since the "epoch", 2020-03-05.
 
 months = [
-    ["April", date(2020, 4, 1).toordinal() - start],
-    ["May", date(2020, 5, 1).toordinal() - start],
-    ["June", date(2020, 6, 1).toordinal() - start],
-    ["July", date(2020, 7, 1).toordinal() - start],
-    ["August", date(2020, 8, 1).toordinal() - start],
-    ["September", date(2020, 9, 1).toordinal() - start],
-    ["October", date(2020, 10, 1).toordinal() - start],
-    ["November", date(2020, 11, 1).toordinal() - start],
-    # ["December",  date(2020, 12, 1).toordinal() - start]
+    ["April",     date(2020,  4, 1).toordinal() - start],
+    ["May",       date(2020,  5, 1).toordinal() - start],
+    ["June",      date(2020,  6, 1).toordinal() - start],
+    ["July",      date(2020,  7, 1).toordinal() - start],
+    ["August",    date(2020,  8, 1).toordinal() - start],
+    ["September", date(2020,  9, 1).toordinal() - start],
+    ["October",   date(2020, 10, 1).toordinal() - start],
+    ["November",  date(2020, 11, 1).toordinal() - start],
+    ["December",  date(2020, 12, 1).toordinal() - start],
+    # ["January",   date(2021,  1, 1).toordinal() - start],
+    # ["February",  date(2021,  2, 1).toordinal() - start],
+    # ["March",     date(2021,  3, 1).toordinal() - start],
+    # ["April",     date(2021,  4, 1).toordinal() - start],
+    # ["May",       date(2021,  5, 1).toordinal() - start],
+    # ["June",      date(2021,  6, 1).toordinal() - start],
+    # ["July",      date(2021,  7, 1).toordinal() - start],
+    # ["August",    date(2021,  8, 1).toordinal() - start],
+    # ["September", date(2021,  9, 1).toordinal() - start],
+    # ["October",   date(2021, 10, 1).toordinal() - start],
+    # ["November",  date(2021, 11, 1).toordinal() - start],
+    # ["December",  date(2021, 12, 1).toordinal() - start],
 ]
 
+holidays = [
+    ["St. Patrick's", date(2020,  3, 17).toordinal() - start],
+    ["Passover",      date(2020,  4,  9).toordinal() - start],
+    ["Easter",        date(2020,  4, 12).toordinal() - start],
+    ["Cinco",         date(2020,  5,  5).toordinal() - start],
+    ["Memorial",      date(2020,  5, 25).toordinal() - start],
+    ["Independence",  date(2020,  7,  4).toordinal() - start],
+    ["Labor",         date(2020,  9,  7).toordinal() - start],
+    ["Indigenous",    date(2020, 10, 12).toordinal() - start],
+    ["Halloween",     date(2020, 10, 31).toordinal() - start],
+    ["Election",      date(2020, 11,  3).toordinal() - start],
+    ["Veterans",      date(2020, 11, 11).toordinal() - start],
+    ["Thanksgiving",  date(2020, 11, 26).toordinal() - start],
+    ["Christmas",     date(2020, 12, 25).toordinal() - start],
+]
 
 today = strptime(data["date"].iloc[-1], "%Y-%m-%d")
 today = date(today.tm_year, today.tm_mon, today.tm_mday).toordinal()
@@ -169,6 +196,11 @@ plt.ylim([-50, ymax])
 for month, day in months:
     plt.plot((day, day), (0, ymax), c="gray", alpha=0.5, zorder=1)
     plt.text(day + 1, 300, month, rotation=90, c="gray", alpha=0.5, zorder=1)
+
+## Label holidays
+#for holiday, day in holidays:
+#    plt.plot((day + 7, day + 7), (0, ymax / 2), c="gray", linestyle='dashed', alpha=0.5, zorder=1)
+#    # plt.text(day + 1, 300, holiday, rotation=90, c="gray", alpha=0.5, zorder=1)
 
 # Save figure
 plt.legend(loc="center left")
@@ -235,6 +267,12 @@ for month, day in months:
     cases = data.loc[day, "diagnosed"]
     plt.plot((cases, cases), (0, 32), c="gray", alpha=0.5, zorder=1)
     plt.text(cases + 1, 1, month, rotation=90, c="gray", alpha=0.5, zorder=1)
+
+## Label holidays
+#for holiday, day in holidays:
+#    cases = data.loc[day + 7, "diagnosed"]
+#    plt.plot((cases, cases), (0, 16), c="gray", linestyle='dashed', alpha=0.5, zorder=1)
+#    # plt.text(cases + 1, 1, holiday, rotation=90, c="gray", alpha=0.5, zorder=1)
 
 plt.savefig("increment.png", dpi=400, bbox_inches="tight")
 plt.close()
