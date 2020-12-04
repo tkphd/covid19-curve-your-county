@@ -188,12 +188,12 @@ plt.ylim([-50, ymax])
 # Label months
 for month, day in months:
     plt.plot((day, day), (0, ymax), c="gray", alpha=0.5, zorder=1)
-    plt.text(day + 1, 300, month, rotation=90, c="gray", alpha=0.5, zorder=1)
+    plt.text(day + 1, 2000, month, rotation=90, c="gray", alpha=0.5, zorder=1)
 
 # Label holidays
 for holiday, day in holidays:
-    plt.plot((day, day), (0, ymax - 6000), c="gray", linestyle='dashed', linewidth=0.5, alpha=0.5, zorder=1)
-    plt.text(day - 2.5, ymax - 5500, holiday, rotation=90, c="gray", fontsize=6, alpha=0.5, zorder=1)
+    plt.plot((day, day), (0, ymax - 6500), c="gray", linestyle='dashed', linewidth=0.5, alpha=0.5, zorder=1)
+    plt.text(day - 2.5, ymax - 6000, holiday, rotation=90, c="gray", fontsize=6, alpha=0.5, zorder=1)
 
 # Save figure
 plt.legend(loc="center left")
@@ -231,6 +231,9 @@ ax1.plot(
     label="{0}-day avg".format(window_width),
 )
 
+ymin, ymax = plt.ylim()
+ax1.set_ylim([0, ymax])
+
 key = "killed"
 ax2 = ax1.twinx()
 ax2.set_ylim([0, 32])
@@ -264,8 +267,8 @@ for month, day in months:
 # Label holidays
 for holiday, day in holidays:
     cases = data.loc[day, "diagnosed"]
-    plt.plot((cases, cases), (0, 26.5), c="gray", linestyle='dashed', linewidth=0.5, alpha=0.5, zorder=1)
-    plt.text(cases - 300, 27, holiday, rotation=90, c="gray", fontsize=6, alpha=0.5, zorder=1)
+    plt.plot((cases, cases), (0, 26.25), c="gray", linestyle='dashed', linewidth=0.5, alpha=0.5, zorder=1)
+    plt.text(cases - 300, 26.75, holiday, rotation=90, c="gray", fontsize=6, alpha=0.5, zorder=1)
 
 plt.savefig("increment.png", dpi=400, bbox_inches="tight")
 plt.close()
