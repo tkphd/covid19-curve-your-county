@@ -290,21 +290,21 @@ print(
     "Today, {}, there were {} new cases and {} new death{} in @MontgomeryCoMD.".format(
         today, dCases, "no" if dKills == 0 else dKills, "" if dKills == 1 else "s"
     ),
-    "Since March 5, 2020, we have seen {:_} confirmed cases of #COVID19 (cumulative),".format(
+    "Since March 5, 2020, we have seen {:,} confirmed cases of #COVID19 (cumulative),".format(
         nCases
-    ).replace("_", u"\u2009"),
-    "and {:_} #MoCo residents have been killed. #WearAMask #StayHomeSaveLives".format(
+    ),
+    "and {:,} #MoCo residents have been killed. #WearAMask #StayHomeSaveLives".format(
         nKills
-    ).replace("_", u"\u2009"),
+    ),
 )
 
 print()
 
 print(
     "Cumulative cases and deaths due to COVID-19 in Montgomery County, Maryland, since 5 March 2020.",
-    "Current total is {:_} infected and {:_} killed.".format(
+    "Current total is {:,} infected and {:,} killed.".format(
         nCases, nKills
-    ).replace("_", u"\u2009"),
+    ),
 )
 
 print()
@@ -314,9 +314,9 @@ print(
     "The increment for {}".format(
         today
     ),
-    "is {:_} infections and {:_} deaths.".format(
+    "is {:,} infections and {:,} deaths.".format(
         dCases, dKills
-    ).replace("_", u"\u2009"),
+    ),
 )
 
 print()
