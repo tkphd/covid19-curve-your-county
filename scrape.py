@@ -45,7 +45,7 @@ headers.append('Total_Deaths')
 
 county = data[3:-8:4]
 cases = np.array([int(x.replace(',', '')) if x else 0 for x in data[4:-7:4]])
-deaths = np.array([int(x.strip('()')) if x else 0 for x in data[5:-6:4]])
+deaths = np.array([int(x.replace(',', '').strip('()')) if x else 0 for x in data[5:-6:4]])
 related = np.array([int(x.strip('*')) if x else 0 for x in data[6:-5:4]])
 total_deaths = deaths + related
 
