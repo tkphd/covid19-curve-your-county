@@ -143,7 +143,8 @@ holidays = [
     ["Labor",         date(2020,  9,  7).toordinal() - start],
     ["Halloween",     date(2020, 10, 31).toordinal() - start],
     ["Thanksgiving",  date(2020, 11, 26).toordinal() - start],
-    # ["Christmas",     date(2020, 12, 25).toordinal() - start],
+    ["Christmas",     date(2020, 12, 25).toordinal() - start],
+    # ["New Year",     date(2021,  1,  1).toordinal() - start],
 ]
 
 today = strptime(data["date"].iloc[-1], "%Y-%m-%d")
@@ -269,6 +270,7 @@ for holiday, day in holidays:
     cases = data.loc[day, "diagnosed"]
     plt.plot((cases, cases), (0, 26.25), c="gray", linestyle='dashed', linewidth=0.5, alpha=0.5, zorder=1)
     plt.text(cases - 300, 26.75, holiday, rotation=90, c="gray", fontsize=6, alpha=0.5, zorder=1)
+
 
 plt.savefig("increment.png", dpi=400, bbox_inches="tight")
 plt.close()
