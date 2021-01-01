@@ -93,6 +93,7 @@ def sigfig(x, n):
     shifted_dp = x / (10 ** e)  # decimal place shifted n d.p.
     return np.around(shifted_dp) * (10 ** e)  # round and revert
 
+data = pd.read_csv(dataname)
 
 fig = plt.figure(figsize=(6, 4))
 plt.suptitle("COVID-19 in Montgomery County, Maryland, USA", fontweight="bold")
@@ -100,12 +101,6 @@ plt.title("github.com/tkphd/covid19-curve-your-county", style="oblique")
 plt.xlabel("Days since 5 March 2020")
 plt.ylabel("Number of People")
 
-# Data
-
-data = pd.read_csv(dataname)
-dmax = 1
-for key in columns:
-    dmax = max(dmax, data[key].max())
 
 start = strptime(data["date"].iloc[0], "%Y-%m-%d")
 start = date(start.tm_year, start.tm_mon, start.tm_mday).toordinal()
@@ -114,6 +109,7 @@ start = date(start.tm_year, start.tm_mon, start.tm_mday).toordinal()
 # Keep track of when successive months began, in terms of days since the "epoch", 2020-03-05.
 
 months = [
+    # 2020
     ["April",     date(2020,  4, 1).toordinal() - start],
     ["May",       date(2020,  5, 1).toordinal() - start],
     ["June",      date(2020,  6, 1).toordinal() - start],
@@ -123,32 +119,53 @@ months = [
     ["October",   date(2020, 10, 1).toordinal() - start],
     ["November",  date(2020, 11, 1).toordinal() - start],
     ["December",  date(2020, 12, 1).toordinal() - start],
-    # ["January",   date(2021,  1, 1).toordinal() - start],
-    # ["February",  date(2021,  2, 1).toordinal() - start],
-    # ["March",     date(2021,  3, 1).toordinal() - start],
-    # ["April",     date(2021,  4, 1).toordinal() - start],
-    # ["May",       date(2021,  5, 1).toordinal() - start],
-    # ["June",      date(2021,  6, 1).toordinal() - start],
-    # ["July",      date(2021,  7, 1).toordinal() - start],
-    # ["August",    date(2021,  8, 1).toordinal() - start],
-    # ["September", date(2021,  9, 1).toordinal() - start],
-    # ["October",   date(2021, 10, 1).toordinal() - start],
-    # ["November",  date(2021, 11, 1).toordinal() - start],
-    # ["December",  date(2021, 12, 1).toordinal() - start],
+    #
+    # 2021
+    ["January",   date(2021,  1, 1).toordinal() - start],
+    ["February",  date(2021,  2, 1).toordinal() - start],
+    ["March",     date(2021,  3, 1).toordinal() - start],
+    ["April",     date(2021,  4, 1).toordinal() - start],
+    ["May",       date(2021,  5, 1).toordinal() - start],
+    ["June",      date(2021,  6, 1).toordinal() - start],
+    ["July",      date(2021,  7, 1).toordinal() - start],
+    ["August",    date(2021,  8, 1).toordinal() - start],
+    ["September", date(2021,  9, 1).toordinal() - start],
+    ["October",   date(2021, 10, 1).toordinal() - start],
+    ["November",  date(2021, 11, 1).toordinal() - start],
+    ["December",  date(2021, 12, 1).toordinal() - start],
 ]
 
 holidays = [
+    # 2020
     ["Memorial",      date(2020,  5, 25).toordinal() - start],
+    ["Juneteenth",    date(2020,  6, 19).toordinal() - start],
     ["Independence",  date(2020,  7,  4).toordinal() - start],
     ["Labor",         date(2020,  9,  7).toordinal() - start],
     ["Halloween",     date(2020, 10, 31).toordinal() - start],
+    ["Veterans",      date(2020, 11, 11).toordinal() - start],
     ["Thanksgiving",  date(2020, 11, 26).toordinal() - start],
     ["Christmas",     date(2020, 12, 25).toordinal() - start],
-    # ["New Year",     date(2021,  1,  1).toordinal() - start],
+    #
+    # 2021
+    ["New Year",      date(2021,  1,  1).toordinal() - start],
+    ["MLK, Jr",       date(2021,  1, 18).toordinal() - start],
+    ["Inauguration",  date(2021,  1, 20).toordinal() - start],
+    ["Presidents",    date(2021,  2, 15).toordinal() - start],
+    ["Earth",         date(2021,  4, 22).toordinal() - start],
+    ["Memorial",      date(2021,  5, 31).toordinal() - start],
+    ["Juneteenth",    date(2021,  6, 19).toordinal() - start],
+    ["Independence",  date(2021,  7,  4).toordinal() - start],
+    ["Labor",         date(2021,  9,  6).toordinal() - start],
+    ["Indigenous",    date(2021, 10, 11).toordinal() - start],
+    ["Halloween",     date(2021, 10, 31).toordinal() - start],
+    ["Veterans",      date(2021, 11, 11).toordinal() - start],
+    ["Thanksgiving",  date(2021, 11, 25).toordinal() - start],
+    ["Christmas",     date(2021, 12, 25).toordinal() - start],
+
 ]
 
 today = strptime(data["date"].iloc[-1], "%Y-%m-%d")
-today = date(today.tm_year, today.tm_mon, today.tm_mday).toordinal()
+today = date(today.tm_year, today.tm_mon, today.tm_mday).toordinal() - start
 
 y_off = 1 + 0.35  # offset for equation boxes
 
@@ -188,13 +205,15 @@ plt.ylim([-50, ymax])
 
 # Label months
 for month, day in months:
-    plt.plot((day, day), (0, ymax), c="gray", alpha=0.5, zorder=1)
-    plt.text(day + 1, 2000, month, rotation=90, c="gray", alpha=0.5, zorder=1)
+    if day <= today:
+        plt.plot((day, day), (0, ymax), c="gray", alpha=0.5, zorder=1)
+        plt.text(day + 1, 2000, month, rotation=90, c="gray", alpha=0.5, zorder=1)
 
 # Label holidays
 for holiday, day in holidays:
-    plt.plot((day, day), (0, ymax - 6500), c="gray", linestyle='dashed', linewidth=0.5, alpha=0.5, zorder=1)
-    plt.text(day - 2.5, ymax - 6000, holiday, rotation=90, c="gray", fontsize=6, alpha=0.5, zorder=1)
+    if day <= today:
+        plt.plot((day, day), (0, ymax - 6500), c="gray", linestyle='dashed', linewidth=0.5, alpha=0.5, zorder=1)
+        plt.text(day - 2.5, ymax - 6000, holiday, rotation=90, c="gray", fontsize=6, alpha=0.5, zorder=1)
 
 # Save figure
 plt.legend(loc="center left")
@@ -261,15 +280,17 @@ ax2.plot(
 
 # Label months
 for month, day in months:
-    cases = data.loc[day, "diagnosed"]
-    plt.plot((cases, cases), (0, 32), c="gray", alpha=0.5, zorder=1)
-    plt.text(cases + 1, 1, month, rotation=90, c="gray", alpha=0.5, zorder=1)
+    if day <= today:
+        cases = data.loc[day, "diagnosed"]
+        plt.plot((cases, cases), (0, 32), c="gray", alpha=0.5, zorder=1)
+        plt.text(cases + 1, 1, month, rotation=90, c="gray", alpha=0.5, zorder=1)
 
 # Label holidays
 for holiday, day in holidays:
-    cases = data.loc[day, "diagnosed"]
-    plt.plot((cases, cases), (0, 26.25), c="gray", linestyle='dashed', linewidth=0.5, alpha=0.5, zorder=1)
-    plt.text(cases - 300, 26.75, holiday, rotation=90, c="gray", fontsize=6, alpha=0.5, zorder=1)
+    if day <= today:
+        cases = data.loc[day, "diagnosed"]
+        plt.plot((cases, cases), (0, 26.25), c="gray", linestyle='dashed', linewidth=0.5, alpha=0.5, zorder=1)
+        plt.text(cases - 300, 26.75, holiday, rotation=90, c="gray", fontsize=6, alpha=0.5, zorder=1)
 
 
 plt.savefig("increment.png", dpi=400, bbox_inches="tight")
