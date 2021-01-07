@@ -135,8 +135,9 @@ months = [
     ["December",  date(2021, 12, 1).toordinal() - start],
 ]
 
-holidays = [
+notables = [
     # 2020
+    ["Earth",         date(2020,  4, 22).toordinal() - start],
     ["Memorial",      date(2020,  5, 25).toordinal() - start],
     ["Juneteenth",    date(2020,  6, 19).toordinal() - start],
     ["Independence",  date(2020,  7,  4).toordinal() - start],
@@ -148,6 +149,7 @@ holidays = [
     #
     # 2021
     ["New Year",      date(2021,  1,  1).toordinal() - start],
+    ["Coup Attempt",  date(2021,  1,  6).toordinal() - start],
     ["MLK, Jr",       date(2021,  1, 18).toordinal() - start],
     ["Inauguration",  date(2021,  1, 20).toordinal() - start],
     ["Presidents",    date(2021,  2, 15).toordinal() - start],
@@ -161,7 +163,6 @@ holidays = [
     ["Veterans",      date(2021, 11, 11).toordinal() - start],
     ["Thanksgiving",  date(2021, 11, 25).toordinal() - start],
     ["Christmas",     date(2021, 12, 25).toordinal() - start],
-
 ]
 
 today = strptime(data["date"].iloc[-1], "%Y-%m-%d")
@@ -209,11 +210,11 @@ for month, day in months:
         plt.plot((day, day), (0, ymax), c="gray", alpha=0.5, zorder=1)
         plt.text(day + 1, 2000, month, rotation=90, c="gray", alpha=0.5, zorder=1)
 
-# Label holidays
-for holiday, day in holidays:
+# Label notables
+for notable, day in notables:
     if day <= today:
-        plt.plot((day, day), (0, ymax - 6500), c="gray", linestyle='dashed', linewidth=0.5, alpha=0.5, zorder=1)
-        plt.text(day - 2.5, ymax - 6000, holiday, rotation=90, c="gray", fontsize=6, alpha=0.5, zorder=1)
+        plt.plot((day, day), (0, ymax - 9000), c="gray", linestyle='dashed', linewidth=0.5, alpha=0.5, zorder=1)
+        plt.text(day - 2.5, ymax - 8500, notable, rotation=90, c="gray", fontsize=6, alpha=0.5, zorder=1)
 
 # Save figure
 plt.legend(loc="center left")
@@ -285,12 +286,12 @@ for month, day in months:
         plt.plot((cases, cases), (0, 32), c="gray", alpha=0.5, zorder=1)
         plt.text(cases + 1, 1, month, rotation=90, c="gray", alpha=0.5, zorder=1)
 
-# Label holidays
-for holiday, day in holidays:
+# Label notables
+for notable, day in notables:
     if day <= today:
         cases = data.loc[day, "diagnosed"]
         plt.plot((cases, cases), (0, 26.25), c="gray", linestyle='dashed', linewidth=0.5, alpha=0.5, zorder=1)
-        plt.text(cases - 300, 26.75, holiday, rotation=90, c="gray", fontsize=6, alpha=0.5, zorder=1)
+        plt.text(cases - 300, 26.75, notable, rotation=90, c="gray", fontsize=6, alpha=0.5, zorder=1)
 
 
 plt.savefig("increment.png", dpi=400, bbox_inches="tight")
