@@ -25,7 +25,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-xpath = '//*[@id="ember116"]/div/table[1]'
+# === If the script times out, set the updated table element below! ===
+
+xpath = '//*[@id="ember117"]/div/table[1]'
 
 opts = Options()
 opts.headless = True
